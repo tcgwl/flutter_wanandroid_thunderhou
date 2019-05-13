@@ -1,15 +1,14 @@
-
 import 'package:flutter_wanandroid_thunderhou/util/string_util.dart';
 
-class HomeArticleBean {
-  HomeArticle data;
+class WechatArticleBean {
+  WechatArticle data;
   int errorCode;
   String errorMsg;
 
-  HomeArticleBean({this.data, this.errorCode, this.errorMsg});
+  WechatArticleBean({this.data, this.errorCode, this.errorMsg});
 
-  HomeArticleBean.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new HomeArticle.fromJson(json['data']) : null;
+  WechatArticleBean.fromJson(Map<String, dynamic> json) {
+    data = json['data'] != null ? new WechatArticle.fromJson(json['data']) : null;
     errorCode = json['errorCode'];
     errorMsg = json['errorMsg'];
   }
@@ -25,7 +24,7 @@ class HomeArticleBean {
   }
 }
 
-class HomeArticle {
+class WechatArticle {
   int curPage;
   List<Article> datas;
   int offset;
@@ -34,7 +33,7 @@ class HomeArticle {
   int size;
   int total;
 
-  HomeArticle(
+  WechatArticle(
       {this.curPage,
         this.datas,
         this.offset,
@@ -43,7 +42,7 @@ class HomeArticle {
         this.size,
         this.total});
 
-  HomeArticle.fromJson(Map<String, dynamic> json) {
+  WechatArticle.fromJson(Map<String, dynamic> json) {
     curPage = json['curPage'];
     if (json['datas'] != null) {
       datas = new List<Article>();
@@ -91,6 +90,7 @@ class Article {
   int publishTime;
   int superChapterId;
   String superChapterName;
+  List<Tags> tags;
   String title;
   int type;
   int userId;
@@ -115,6 +115,7 @@ class Article {
         this.publishTime,
         this.superChapterId,
         this.superChapterName,
+        this.tags,
         this.title,
         this.type,
         this.userId,
@@ -139,6 +140,12 @@ class Article {
     publishTime = json['publishTime'];
     superChapterId = json['superChapterId'];
     superChapterName = json['superChapterName'];
+    if (json['tags'] != null) {
+      tags = new List<Tags>();
+      json['tags'].forEach((v) {
+        tags.add(new Tags.fromJson(v));
+      });
+    }
     title = StringUtil.handleSpecialChar(json['title']);
     type = json['type'];
     userId = json['userId'];
@@ -165,11 +172,33 @@ class Article {
     data['publishTime'] = this.publishTime;
     data['superChapterId'] = this.superChapterId;
     data['superChapterName'] = this.superChapterName;
+    if (this.tags != null) {
+      data['tags'] = this.tags.map((v) => v.toJson()).toList();
+    }
     data['title'] = this.title;
     data['type'] = this.type;
     data['userId'] = this.userId;
     data['visible'] = this.visible;
     data['zan'] = this.zan;
+    return data;
+  }
+}
+
+class Tags {
+  String name;
+  String url;
+
+  Tags({this.name, this.url});
+
+  Tags.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    url = json['url'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['url'] = this.url;
     return data;
   }
 }

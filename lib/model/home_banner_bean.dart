@@ -1,4 +1,6 @@
 
+import 'package:flutter_wanandroid_thunderhou/util/string_util.dart';
+
 class HomeBannerBean {
   List<HomeBanner> data;
   int errorCode;
@@ -54,7 +56,7 @@ class HomeBanner {
     imagePath = json['imagePath'];
     isVisible = json['isVisible'];
     order = json['order'];
-    title = json['title'];
+    title = StringUtil.handleSpecialChar(json['title']);
     type = json['type'];
     url = json['url'];
   }

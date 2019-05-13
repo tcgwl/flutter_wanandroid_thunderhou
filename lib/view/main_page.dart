@@ -53,6 +53,7 @@ class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
           currentIndex: _tabIndex,
           type: BottomNavigationBarType.fixed,
           onTap: (index) => _onTap(index),
+          fixedColor: Colors.blue,
         ),
       ),
     );

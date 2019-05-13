@@ -30,15 +30,15 @@ class _HomeArticleState extends State<HomeArticleItem> {
         );
       },
       child: Card(
-          margin: EdgeInsets.fromLTRB(2,5,2,0),
+          margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
           child: Container(
-            padding: EdgeInsets.fromLTRB(18,10,18,10),
+            padding: EdgeInsets.fromLTRB(18, 10, 18, 10),
             child: Column(
               children: <Widget>[
                 Row(
                   children: <Widget>[
                     Icon(
-                      Icons.child_care,
+                      Icons.perm_identity,
                       color: Colors.blueAccent,
                       size: 18,
                     ),
@@ -60,7 +60,7 @@ class _HomeArticleState extends State<HomeArticleItem> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                     child: Text(
-                      widget.article.title.replaceAll("&rdquo;", "").replaceAll("&ldquo;", ""),
+                      widget.article.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

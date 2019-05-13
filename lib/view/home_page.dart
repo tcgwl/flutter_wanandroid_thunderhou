@@ -19,19 +19,19 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   //首页article列表
   List<Article> articles = List();
   //文章列表控制器
-  ScrollController _scrollerController = ScrollController();
+  ScrollController _scrollController = ScrollController();
   int curPage = 0;
   double screenWidth;
-  double bannerHeight = 180;
+  final double bannerHeight = 180;
 
   @override
   void initState() {
     super.initState();
     getBanner();
     getArticleList(false);
-    _scrollerController.addListener(() {
-      var maxScrollExtent = _scrollerController.position.maxScrollExtent;
-      var pixels = _scrollerController.position.pixels;
+    _scrollController.addListener(() {
+      var maxScrollExtent = _scrollController.position.maxScrollExtent;
+      var pixels = _scrollController.position.pixels;
       if (maxScrollExtent == pixels) {//滑动到底部
         curPage++;
         getArticleList(true);
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         return index == 0 ?
           createBannerItem() : HomeArticleItem(articles[index - 1]);
       },
-      controller: _scrollerController,
+      controller: _scrollController,
     );
 
     return Scaffold(
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           child: Row(
             children: <Widget>[
               Text(
-                '${banners[config.activeIndex].title}',
+                banners[config.activeIndex].title,
                 style: TextStyle(
                   fontSize: TextSizeConst.smallTextSize,
                   color: Colors.white

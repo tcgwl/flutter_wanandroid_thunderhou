@@ -43,4 +43,44 @@ class ApiManager {
       return null;
     }
   }
+
+  /// 获取推荐的微信公众号列表
+  Future<Response> getWechatCount() async {
+    try {
+      Response response = await _dio.get("wxarticle/chapters/json");
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 获取微信文章列表
+  Future<Response> getWechatArticle(int cid, int page) async {
+    try {
+      Response response = await _dio.get("wxarticle/list/${cid}/${page}/json");
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 获取项目分类
+  Future<Response> getProjectClassify() async {
+    try {
+      Response response = await _dio.get("project/tree/json");
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 获取项目列表
+  Future<Response> getProjectList(int cid, int page) async {
+    try {
+      Response response = await _dio.get("project/list/${page}/json", queryParameters: {"cid": "${cid}"});
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
 }
