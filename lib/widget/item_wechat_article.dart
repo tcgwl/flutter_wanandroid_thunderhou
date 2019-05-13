@@ -18,6 +18,7 @@ class _WechatArticleState extends State<WechatArticleItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print('url:${widget.article.link}');
         Navigator.push(
             context,
             MaterialPageRoute(

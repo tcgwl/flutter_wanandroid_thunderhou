@@ -95,10 +95,11 @@ class _WechatArticlePageState extends State<WechatArticlePage> with SingleTicker
 
   /// 获取推荐的微信公众号列表
   Future<List<WechatCount>> getWechatCount() async {
-    Response _response;
-    await ApiManager().getWechatCount().then((response) {
-      _response = response;
-    });
-    return WechatCountBean.fromJson(_response.data).data;
+    try {
+      Response response = await ApiManager().getWechatCount();
+      return WechatCountBean.fromJson(response.data).data;
+    } catch (e) {
+      return null;
+    }
   }
 }

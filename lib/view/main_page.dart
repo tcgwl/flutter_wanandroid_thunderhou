@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid_thunderhou/view/aosp_page.dart';
 import 'package:flutter_wanandroid_thunderhou/view/home_page.dart';
 import 'package:flutter_wanandroid_thunderhou/view/mine_page.dart';
+import 'package:flutter_wanandroid_thunderhou/view/navigation_page.dart';
 import 'package:flutter_wanandroid_thunderhou/view/wechat_article_page.dart';
 
 class WanApp extends StatefulWidget {
@@ -40,6 +41,7 @@ class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
             HomePage(),
             WechatArticlePage(),
             AOSPPage(),
+            NavPage(),
             MinePage(),
           ],
         ),
@@ -47,7 +49,8 @@ class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('首页')),
             BottomNavigationBarItem(icon: Icon(Icons.wb_cloudy), title: Text('公众号')),
-            BottomNavigationBarItem(icon: Icon(Icons.apps), title: Text('项目')),
+            BottomNavigationBarItem(icon: Icon(Icons.language), title: Text('项目')),
+            BottomNavigationBarItem(icon: Icon(Icons.apps), title: Text('导航')),
             BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('我的')),
           ],
           currentIndex: _tabIndex,

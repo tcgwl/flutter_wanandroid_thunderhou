@@ -38,7 +38,7 @@ class _HomeArticleState extends State<HomeArticleItem> {
                 Row(
                   children: <Widget>[
                     Icon(
-                      Icons.perm_identity,
+                      Icons.face,
                       color: Colors.blueAccent,
                       size: 18,
                     ),

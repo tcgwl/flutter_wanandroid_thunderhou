@@ -7,7 +7,7 @@ class StringUtil {
     return str.replaceAll("&rdquo;", "」")
         .replaceAll("&ldquo;", "「")
         .replaceAll("&amp;", "&")
-        .replaceAll("&quot;", "\"\"")
+        .replaceAll("&quot;", "\"")
         .replaceAll("&mdash;", "-");
   }
 }
