@@ -7,9 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:flutter_wanandroid_thunderhou/main.dart';
-import 'package:flutter_wanandroid_thunderhou/view/main_page.dart';
+import 'package:wanandroid/view/main_page.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wanandroid/widget/loading.dart';
 
 typedef SuccessWidget = Widget Function(AsyncSnapshot snapshot);
 
@@ -23,18 +24,19 @@ class AsyncSnapshotWidget extends StatelessWidget {
       case ConnectionState.active:
         print('active');
         return Center(
-          child: CircularProgressIndicator(),
+          //child: CircularProgressIndicator(),
+          child: Loading(),
         );
       case ConnectionState.waiting:
         print('waiting');
         return Center(
-          child: CircularProgressIndicator(),
+          child: Loading(),
         );
       case ConnectionState.done:
         print('done');
         return successWidget(snapshot);
       default:
-        return null;
+        return Container(width: 0, height: 0);
     }
   }
 }

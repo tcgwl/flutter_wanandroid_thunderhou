@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wanandroid_thunderhou/view/main_page.dart';
+import 'package:flutter/services.dart';
+import 'package:wanandroid/view/main_page.dart';
 
-void main() => runApp(WanApp());
+/// 程序入口
+void main() =>
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]) //竖屏
+      .then((_) {
+      runApp(WanApp());
+    });

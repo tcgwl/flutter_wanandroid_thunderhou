@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wanandroid_thunderhou/constant/textsize_const.dart';
-import 'package:flutter_wanandroid_thunderhou/model/home_article_bean.dart';
-import 'package:flutter_wanandroid_thunderhou/view/webview_page.dart';
+import 'package:wanandroid/conf/textsize_const.dart';
+import 'package:wanandroid/model/dto/articledatas_dto.dart';
+import 'package:wanandroid/view/article_page.dart';
 
 /// 首页文章列表条目
 class HomeArticleItem extends StatefulWidget {
-  final Article article;
+  final Datas article;
 
   HomeArticleItem(this.article);
 
@@ -19,12 +19,15 @@ class _HomeArticleState extends State<HomeArticleItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print('首页文章url:${widget.article.link}');
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => WebViewPage(
-                    title: widget.article.title,
-                    url: widget.article.link
+                builder: (context) => ArticlePage(
+                    widget.article.id,
+                    widget.article.title,
+                    widget.article.link,
+                    fav: widget.article.collect,
                 ),
             )
         );

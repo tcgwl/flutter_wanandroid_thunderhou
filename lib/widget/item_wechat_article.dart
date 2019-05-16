@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wanandroid_thunderhou/constant/textsize_const.dart';
-import 'package:flutter_wanandroid_thunderhou/model/wechat_article_bean.dart';
-import 'package:flutter_wanandroid_thunderhou/view/webview_page.dart';
+import 'package:wanandroid/conf/textsize_const.dart';
+import 'package:wanandroid/model/dto/articledatas_dto.dart';
+import 'package:wanandroid/view/article_page.dart';
 
-/// 微信文章列表条目
+/// 公众号文章列表条目
 class WechatArticleItem extends StatefulWidget {
-  Article article;
+  Datas article;
 
   WechatArticleItem(this.article);
 
@@ -18,14 +18,16 @@ class _WechatArticleState extends State<WechatArticleItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('url:${widget.article.link}');
+        print('公众号文章url:${widget.article.link}');
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => WebViewPage(
-                    title: widget.article.title,
-                    url: widget.article.link
-                )
+              builder: (context) => ArticlePage(
+                widget.article.id,
+                widget.article.title,
+                widget.article.link,
+                fav: widget.article.collect,
+              ),
             )
         );
       },

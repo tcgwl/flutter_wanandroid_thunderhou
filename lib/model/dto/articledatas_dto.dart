@@ -1,53 +1,72 @@
-import 'package:flutter_wanandroid_thunderhou/util/string_util.dart';
+//{
+//    "data":{
+//        "curPage":2,
+//        "datas":[
+//            {
+//                "apkLink":"",
+//                "author":"minmin_1123",
+//                "chapterId":73,
+//                "chapterName":"面试相关",
+//                "collect":false,
+//                "courseId":13,
+//                "desc":"",
+//                "envelopePic":"",
+//                "fresh":false,
+//                "id":3458,
+//                "link":"https://www.jianshu.com/p/718aa3c1a70b",
+//                "niceDate":"2018-10-06",
+//                "origin":"",
+//                "projectLink":"",
+//                "publishTime":1538818273000,
+//                "superChapterId":186,
+//                "superChapterName":"热门专题",
+//                "tags":[
+//
+//                ],
+//                "title":"2019校招Android面试题解1.0（上篇）",
+//                "type":0,
+//                "userId":-1,
+//                "visible":1,
+//                "zan":0
+//            }
+//        ],
+//        "offset":20,
+//        "over":false,
+//        "pageCount":86,
+//        "size":20,
+//        "total":1704
+//    },
+//    "errorCode":0,
+//    "errorMsg":""
+//}
+import 'package:wanandroid/model/dto/tags_dto.dart';
+import 'package:wanandroid/util/string_util.dart';
 
-class WechatArticleBean {
-  WechatArticle data;
-  int errorCode;
-  String errorMsg;
-
-  WechatArticleBean({this.data, this.errorCode, this.errorMsg});
-
-  WechatArticleBean.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new WechatArticle.fromJson(json['data']) : null;
-    errorCode = json['errorCode'];
-    errorMsg = json['errorMsg'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.data != null) {
-      data['data'] = this.data.toJson();
-    }
-    data['errorCode'] = this.errorCode;
-    data['errorMsg'] = this.errorMsg;
-    return data;
-  }
-}
-
-class WechatArticle {
+///文章列表
+class ArticleDatasDTO {
   int curPage;
-  List<Article> datas;
+  List<Datas> datas;
   int offset;
   bool over;
   int pageCount;
   int size;
   int total;
 
-  WechatArticle(
+  ArticleDatasDTO(
       {this.curPage,
-        this.datas,
-        this.offset,
-        this.over,
-        this.pageCount,
-        this.size,
-        this.total});
+      this.datas,
+      this.offset,
+      this.over,
+      this.pageCount,
+      this.size,
+      this.total});
 
-  WechatArticle.fromJson(Map<String, dynamic> json) {
+  ArticleDatasDTO.fromJson(Map<String, dynamic> json) {
     curPage = json['curPage'];
     if (json['datas'] != null) {
-      datas = new List<Article>();
+      datas = new List<Datas>();
       json['datas'].forEach((v) {
-        datas.add(new Article.fromJson(v));
+        datas.add(new Datas.fromJson(v));
       });
     }
     offset = json['offset'];
@@ -72,7 +91,7 @@ class WechatArticle {
   }
 }
 
-class Article {
+class Datas {
   String apkLink;
   String author;
   int chapterId;
@@ -97,32 +116,32 @@ class Article {
   int visible;
   int zan;
 
-  Article(
+  Datas(
       {this.apkLink,
-        this.author,
-        this.chapterId,
-        this.chapterName,
-        this.collect,
-        this.courseId,
-        this.desc,
-        this.envelopePic,
-        this.fresh,
-        this.id,
-        this.link,
-        this.niceDate,
-        this.origin,
-        this.projectLink,
-        this.publishTime,
-        this.superChapterId,
-        this.superChapterName,
-        this.tags,
-        this.title,
-        this.type,
-        this.userId,
-        this.visible,
-        this.zan});
+      this.author,
+      this.chapterId,
+      this.chapterName,
+      this.collect,
+      this.courseId,
+      this.desc,
+      this.envelopePic,
+      this.fresh,
+      this.id,
+      this.link,
+      this.niceDate,
+      this.origin,
+      this.projectLink,
+      this.publishTime,
+      this.superChapterId,
+      this.superChapterName,
+      this.tags,
+      this.title,
+      this.type,
+      this.userId,
+      this.visible,
+      this.zan});
 
-  Article.fromJson(Map<String, dynamic> json) {
+  Datas.fromJson(Map<String, dynamic> json) {
     apkLink = json['apkLink'];
     author = json['author'];
     chapterId = json['chapterId'];
@@ -180,25 +199,6 @@ class Article {
     data['userId'] = this.userId;
     data['visible'] = this.visible;
     data['zan'] = this.zan;
-    return data;
-  }
-}
-
-class Tags {
-  String name;
-  String url;
-
-  Tags({this.name, this.url});
-
-  Tags.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    url = json['url'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['url'] = this.url;
     return data;
   }
 }

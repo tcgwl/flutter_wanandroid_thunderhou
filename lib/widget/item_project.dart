@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wanandroid_thunderhou/constant/textsize_const.dart';
-import 'package:flutter_wanandroid_thunderhou/model/project_list_bean.dart';
-import 'package:flutter_wanandroid_thunderhou/view/webview_page.dart';
+import 'package:wanandroid/conf/textsize_const.dart';
+import 'package:wanandroid/model/dto/project_list_dto.dart';
+import 'package:wanandroid/view/article_page.dart';
 
 /// 项目列表条目
 class ProjectItem extends StatefulWidget {
@@ -18,14 +18,16 @@ class _ProjectState extends State<ProjectItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('url:${widget.project.link}');
+        print('项目url:${widget.project.link}');
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => WebViewPage(
-                    title: widget.project.title,
-                    url: widget.project.link
-                )
+              builder: (context) => ArticlePage(
+                widget.project.id,
+                widget.project.title,
+                widget.project.link,
+                fav: widget.project.collect,
+              ),
             )
         );
       },
@@ -38,7 +40,7 @@ class _ProjectState extends State<ProjectItem> {
                   FadeInImage.assetNetwork(
                       width: 120,
                       height: 240,
-                      placeholder: "assets/image_default.png",
+                      placeholder: "images/image_default.png",
                       image: widget.project.envelopePic
                   ),
                   Expanded(

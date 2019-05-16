@@ -1,15 +1,14 @@
+import 'package:wanandroid/util/string_util.dart';
 
-import 'package:flutter_wanandroid_thunderhou/util/string_util.dart';
-
-class ProjectListBean {
-  ProjectList data;
+class Subscriptions {
+  WechatArticleDTO data;
   int errorCode;
   String errorMsg;
 
-  ProjectListBean({this.data, this.errorCode, this.errorMsg});
+  Subscriptions({this.data, this.errorCode, this.errorMsg});
 
-  ProjectListBean.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new ProjectList.fromJson(json['data']) : null;
+  Subscriptions.fromJson(Map<String, dynamic> json) {
+    data = json['data'] != null ? new WechatArticleDTO.fromJson(json['data']) : null;
     errorCode = json['errorCode'];
     errorMsg = json['errorMsg'];
   }
@@ -25,30 +24,30 @@ class ProjectListBean {
   }
 }
 
-class ProjectList {
+class WechatArticleDTO {
   int curPage;
-  List<Project> datas;
+  List<Datas> datas;
   int offset;
   bool over;
   int pageCount;
   int size;
   int total;
 
-  ProjectList(
+  WechatArticleDTO(
       {this.curPage,
-        this.datas,
-        this.offset,
-        this.over,
-        this.pageCount,
-        this.size,
-        this.total});
+      this.datas,
+      this.offset,
+      this.over,
+      this.pageCount,
+      this.size,
+      this.total});
 
-  ProjectList.fromJson(Map<String, dynamic> json) {
+  WechatArticleDTO.fromJson(Map<String, dynamic> json) {
     curPage = json['curPage'];
     if (json['datas'] != null) {
-      datas = new List<Project>();
+      datas = new List<Datas>();
       json['datas'].forEach((v) {
-        datas.add(new Project.fromJson(v));
+        datas.add(new Datas.fromJson(v));
       });
     }
     offset = json['offset'];
@@ -73,7 +72,7 @@ class ProjectList {
   }
 }
 
-class Project {
+class Datas {
   String apkLink;
   String author;
   int chapterId;
@@ -98,39 +97,39 @@ class Project {
   int visible;
   int zan;
 
-  Project(
+  Datas(
       {this.apkLink,
-        this.author,
-        this.chapterId,
-        this.chapterName,
-        this.collect,
-        this.courseId,
-        this.desc,
-        this.envelopePic,
-        this.fresh,
-        this.id,
-        this.link,
-        this.niceDate,
-        this.origin,
-        this.projectLink,
-        this.publishTime,
-        this.superChapterId,
-        this.superChapterName,
-        this.tags,
-        this.title,
-        this.type,
-        this.userId,
-        this.visible,
-        this.zan});
+      this.author,
+      this.chapterId,
+      this.chapterName,
+      this.collect,
+      this.courseId,
+      this.desc,
+      this.envelopePic,
+      this.fresh,
+      this.id,
+      this.link,
+      this.niceDate,
+      this.origin,
+      this.projectLink,
+      this.publishTime,
+      this.superChapterId,
+      this.superChapterName,
+      this.tags,
+      this.title,
+      this.type,
+      this.userId,
+      this.visible,
+      this.zan});
 
-  Project.fromJson(Map<String, dynamic> json) {
+  Datas.fromJson(Map<String, dynamic> json) {
     apkLink = json['apkLink'];
     author = json['author'];
     chapterId = json['chapterId'];
     chapterName = json['chapterName'];
     collect = json['collect'];
     courseId = json['courseId'];
-    desc = StringUtil.handleSpecialChar(json['desc']);
+    desc = json['desc'];
     envelopePic = json['envelopePic'];
     fresh = json['fresh'];
     id = json['id'];

@@ -1,33 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_wanandroid_thunderhou/model/wechat_article_bean.dart';
-import 'package:flutter_wanandroid_thunderhou/net/api_manager.dart';
-import 'package:flutter_wanandroid_thunderhou/widget/item_wechat_article.dart';
+import 'package:wanandroid/conf/imgs.dart';
+import 'package:wanandroid/conf/page_status.dart';
+import 'package:wanandroid/event/event.dart';
+import 'package:wanandroid/model/dto/articledatas_dto.dart';
+import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/toast_util.dart';
+import 'package:wanandroid/widget/empty_view.dart';
+import 'package:wanandroid/widget/error_view.dart';
+import 'package:wanandroid/widget/item_wechat_article.dart';
+import 'package:wanandroid/widget/loading.dart';
 
-/// 微信文章列表页
+/// 公众号文章列表
 class WechatArticleListPage extends StatefulWidget {
-  final int cid;
+  final int sid;
+  final String keyword;
 
-  WechatArticleListPage({@required this.cid});
+  WechatArticleListPage({Key key, this.sid, this.keyword: ''}): super(key: key);
 
   @override
   _WechatArticleListState createState() => _WechatArticleListState();
 }
 
 class _WechatArticleListState extends State<WechatArticleListPage> with AutomaticKeepAliveClientMixin {
+  PageStatus status = PageStatus.LOADING;
   int index = 1;
-  List<Article> articles = List();
+  List<Datas> articles = List();
   ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    getArticleList(false);
+    _refresh();
+    bus.on<FavoriteEvent>().listen((event) {
+      _refresh();
+    });
     _scrollController.addListener(() {
       var maxScrollExtent = _scrollController.position.maxScrollExtent;
       var pixels = _scrollController.position.pixels;
       if (maxScrollExtent == pixels) {
-        index++;
-        getArticleList(true);
+        _loadMore();
       }
     });
   }
@@ -37,36 +48,67 @@ class _WechatArticleListState extends State<WechatArticleListPage> with Automati
 
   @override
   Widget build(BuildContext context) {
-    Widget listView = ListView.builder(
-      itemCount: articles.length,
-      itemBuilder: (context, position) {
-        return WechatArticleItem(articles[position]);
-      },
-      controller: _scrollController,
-    );
-
-    return RefreshIndicator(child: listView, onRefresh: _pullToRefresh);
+    return _buildBody();
   }
 
-  Future<Null> _pullToRefresh() async {
+  Widget _buildBody() {
+    switch (status) {
+      case PageStatus.LOADING:
+        return Loading();
+      case PageStatus.DATA:
+        Widget listView = ListView.builder(
+          itemCount: articles.length,
+          itemBuilder: (context, position) {
+            return WechatArticleItem(articles[position]);
+          },
+          controller: _scrollController,
+        );
+        return RefreshIndicator(child: listView, onRefresh: _refresh);
+      case PageStatus.ERROR:
+        return ErrorView(onClick: _refresh);
+      case PageStatus.EMPTY:
+      default:
+        return EmptyView(
+          iconPath: ImagePath.icEmpty,
+          hint: '暂无内容,点击重试',
+          onClick: _refresh,
+        );
+    }
+  }
+
+  //刷新
+  Future<Null> _refresh() async {
     index = 1;
-    await getArticleList(false);
-    return null;
-  }
-
-  /// 获取微信文章列表
-  void getArticleList(bool isLoadMore) async {
-     await ApiManager().getWechatArticle(widget.cid, index)
-        .then((response) {
-      if (response != null) {
-        var wechatArticleBean = WechatArticleBean.fromJson(response.data);
+    WanRequest()
+        .getSubscriptionsHistory(index, widget.sid, widget.keyword)
+        .then((data) {
+      if (this.mounted) {
         setState(() {
-          if (!isLoadMore) {
-            articles.clear();
-          }
-          articles.addAll(wechatArticleBean.data.datas);
+          articles = data.datas;
+          index++;
+          status = articles.length == 0 ? PageStatus.EMPTY: PageStatus.DATA;
         });
       }
+    }).catchError((e) {
+      ToastUtil.showShort(e.message);
+      setState(() {
+        status = PageStatus.ERROR;
+      });
     });
   }
+
+  //加载数据
+  _loadMore() async {
+    WanRequest()
+        .getSubscriptionsHistory(index, widget.sid, widget.keyword)
+        .then((data) {
+      setState(() {
+        articles.addAll(data.datas);
+        index++;
+      });
+    }).catchError((e) {
+      ToastUtil.showShort(e.message);
+    });
+  }
+
 }

@@ -1,9 +1,12 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_wanandroid_thunderhou/model/wechat_count_bean.dart';
-import 'package:flutter_wanandroid_thunderhou/net/api_manager.dart';
-import 'package:flutter_wanandroid_thunderhou/view/wechat_article_list_page.dart';
-import 'package:flutter_wanandroid_thunderhou/widget/async_snapshot_widget.dart';
+import 'package:wanandroid/conf/page_status.dart';
+import 'package:wanandroid/model/dto/subscriptionslist_dto.dart';
+import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/toast_util.dart';
+import 'package:wanandroid/view/search_page.dart';
+import 'package:wanandroid/view/wechat_article_list_page.dart';
+import 'package:wanandroid/widget/error_view.dart';
+import 'package:wanandroid/widget/loading.dart';
 
 /// '公众号'页面
 class WechatArticlePage extends StatefulWidget {
@@ -12,94 +15,100 @@ class WechatArticlePage extends StatefulWidget {
 }
 
 class _WechatArticlePageState extends State<WechatArticlePage> with SingleTickerProviderStateMixin {
+  PageStatus status = PageStatus.LOADING;
   TabController _tabController;
-  var _tabNames = List<String>();
+  int _currentSId;
+  var _tabs = List<Tab>();
+  var _tabPages = List<WechatArticleListPage>();
+  Widget _appbar;
+
+  @override
+  void initState() {
+    super.initState();
+    _appbar = AppBar(title: Text('公众号'),);
+    _getData();
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(builder: _buildFuture, future: getWechatCount());
-  }
-
-  Widget _buildFuture(BuildContext context, AsyncSnapshot<List<WechatCount>> snapshot) {
-    return AsyncSnapshotWidget(
-      snapshot: snapshot,
-      successWidget: (snapshot) {
-        if (snapshot.data != null) {
-          _parseWechatCounts(snapshot.data);
-
-          if (_tabController == null) {
-            _tabController = TabController(
-                length: snapshot.data.length,
-                vsync: this,
-                initialIndex: 0
-            );
-          }
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('公众号'),
-              centerTitle: true,
-            ),
-            body: Column(
-              children: <Widget>[
-                TabBar(
-                  tabs: _createTabs(),
-                  indicatorColor: Colors.blue,
-                  labelColor: Colors.black87,
-                  unselectedLabelColor: Colors.black45,
-                  controller: _tabController,
-                  isScrollable: true,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: TabBarView(
-                    children: _createPages(snapshot.data),
-                    controller: _tabController,
-                  )
-                )
-              ],
-            ),
-          );
-        }
-      },
+    return Scaffold(
+      appBar: _appbar,
+      body: _buildBody(),
     );
   }
 
-  /// 解析微信公众号列表
-  void _parseWechatCounts(List<WechatCount> weChatCounts) {
-    _tabNames.clear();
-    for (WechatCount count in weChatCounts) {
-      _tabNames.add(count.name);
+  void _getData() async {
+    WanRequest().getSubscriptions().then((data) {
+      _tabController = TabController(length: data.length, vsync: this);
+      _tabController.addListener(() {
+        _currentSId = _tabPages[_tabController.index].sid;
+      });
+      _tabs = data.map<Tab>(
+        (SubscriptionsDTO d) => Tab(text: d.name)
+      ).toList();
+      _tabPages = data.map<WechatArticleListPage>(
+          (SubscriptionsDTO d) => WechatArticleListPage(sid: d.id)
+      ).toList();
+
+      setState(() {
+        _currentSId = _tabPages[_tabController.index].sid;
+        _appbar = _buildAppBar();
+        status = PageStatus.DATA;
+      });
+    }).catchError((e) {
+      ToastUtil.showShort(e.message);
+      setState(() {
+        status = PageStatus.ERROR;
+      });
+    });
+  }
+
+  _buildAppBar() {
+    return AppBar(
+      title: Text('公众号'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SearchPage(SearchPage.Search_Type_WeChat, sId: _currentSId)
+              )
+            );
+          }
+        )
+      ],
+      bottom: TabBar(
+        tabs: _tabs,
+        controller: _tabController,
+        isScrollable: true,
+        //indicatorColor: Theme.of(context).primaryColor,
+        //labelColor: Colors.black87,
+        //unselectedLabelColor: Colors.black45,
+      ),
+    );
+  }
+
+  _buildBody() {
+    switch (status) {
+      case PageStatus.LOADING:
+        return Loading();
+      case PageStatus.DATA:
+        return TabBarView(
+          children: _tabPages,
+          controller: _tabController,
+        );
+      case PageStatus.ERROR:
+      default:
+        return ErrorView(onClick: () => _getData());
     }
   }
 
-  /// 生成顶部tab
-  List<Widget> _createTabs() {
-    List<Widget> widgets = List();
-    for (String name in _tabNames) {
-      var tab = Tab(text: name);
-      widgets.add(tab);
-    }
-    return widgets;
-  }
-
-  /// 创建微信文章列表页
-  List<Widget> _createPages(List<WechatCount> weChatCounts) {
-    List<Widget> widgets = List();
-    for (WechatCount count in weChatCounts) {
-      var page = WechatArticleListPage(cid: count.id);
-      widgets.add(page);
-    }
-    return widgets;
-  }
-
-  /// 获取推荐的微信公众号列表
-  Future<List<WechatCount>> getWechatCount() async {
-    try {
-      Response response = await ApiManager().getWechatCount();
-      return WechatCountBean.fromJson(response.data).data;
-    } catch (e) {
-      return null;
-    }
-  }
 }
