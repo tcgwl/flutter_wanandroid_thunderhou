@@ -215,8 +215,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         status = PageStatus.ERROR;
       });
     });
-
-    return null;
   }
 
   //加载数据

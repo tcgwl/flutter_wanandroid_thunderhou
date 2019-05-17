@@ -6,14 +6,15 @@ class PasswordField extends StatefulWidget {
     this.hintText,
     this.labelText,
     this.helperText,
-    this.onSaved,
-    this.validator,
-    this.onFieldSubmitted,
     this.maxLength,
     this.border,
     this.icon,
-    this.fillColor,
     this.prefixIcon,
+    this.fillColor,
+    this.controller,
+    this.onSaved,
+    this.validator,
+    this.onFieldSubmitted,
   });
 
   final Key fieldKey;
@@ -25,6 +26,7 @@ class PasswordField extends StatefulWidget {
   final Widget icon;
   final Widget prefixIcon;
   final Color fillColor;
+  final TextEditingController controller;
   final FormFieldSetter<String> onSaved;
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onFieldSubmitted;
@@ -40,6 +42,7 @@ class _PasswordFieldState extends State<PasswordField> {
   Widget build(BuildContext context) {
     return TextFormField(
       key: widget.fieldKey,
+      controller: widget.controller,
       obscureText: _obscureText,
       maxLength: widget.maxLength,
       onSaved: widget.onSaved,

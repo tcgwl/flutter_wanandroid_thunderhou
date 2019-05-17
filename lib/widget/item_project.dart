@@ -18,7 +18,6 @@ class _ProjectState extends State<ProjectItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('项目url:${widget.project.link}');
         Navigator.push(
             context,
             MaterialPageRoute(

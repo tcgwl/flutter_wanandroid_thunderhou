@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/conf/constant.dart';
 import 'package:wanandroid/event/event.dart';
 import 'package:wanandroid/net/request.dart';
 import 'package:wanandroid/util/common_util.dart';
 import 'package:wanandroid/util/toast_util.dart';
-import 'package:wanandroid/widget/loading.dart';
 
 ///文章页面
 class ArticlePage extends StatefulWidget {
@@ -57,13 +57,25 @@ class ArticleState extends State<ArticlePage> {
         ],
       );
     } else {
-      _appbar = AppBar(title: Text(widget.title));
+      _appbar = AppBar(
+        title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.open_in_browser),
+            onPressed: () {
+              launch(widget.url);
+            }
+          )
+        ],
+      );
     }
     return _appbar;
   }
 
   @override
   Widget build(BuildContext context) {
+    print('title:${widget.title}');
+    print('url:${widget.url}');
     return WebviewScaffold(
       appBar: _buildAppBar(),
       url: widget.url,

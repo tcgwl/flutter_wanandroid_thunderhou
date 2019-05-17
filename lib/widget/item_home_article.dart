@@ -19,7 +19,6 @@ class _HomeArticleState extends State<HomeArticleItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('首页文章url:${widget.article.link}');
         Navigator.push(
             context,
             MaterialPageRoute(

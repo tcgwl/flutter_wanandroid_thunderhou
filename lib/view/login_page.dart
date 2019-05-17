@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:wanandroid/conf/constant.dart';
+import 'package:wanandroid/event/event.dart';
+import 'package:wanandroid/model/dto/login_dto.dart';
+import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/common_util.dart';
+import 'package:wanandroid/util/sp_util.dart';
 import 'package:wanandroid/util/toast_util.dart';
+import 'package:wanandroid/view/register_page.dart';
 import 'package:wanandroid/widget/arc_clipper.dart';
 import 'package:wanandroid/widget/pwd_field.dart';
 
@@ -10,11 +17,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   var screenWidth;
   var screenHeight;
   String _username;
   String _pwd;
+  final nameEditController = TextEditingController();
+  final pwdEditController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameEditController.dispose();
+    pwdEditController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginBody(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Theme.of(context).backgroundColor,
       body: Stack(
         fit: StackFit.expand,
@@ -87,19 +105,20 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 50),
             SizedBox(
               width: screenWidth * 0.8,
-              height: screenHeight * 0.5 - 50,
+              height: screenHeight * 0.5,
               child: Card(
-                elevation: 2,
+                elevation: 3,
                 child: Form(
                   key: _formKey,
                   child: Padding(
-                    padding: EdgeInsets.all(18),
+                    padding: EdgeInsets.all(15),
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           //用户名
                           TextFormField(
+                            controller: nameEditController,
                             decoration: InputDecoration(
                               border: UnderlineInputBorder(),
                               filled: true,
@@ -113,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           //密码
                           PasswordField(
+                            controller: pwdEditController,
                             border: UnderlineInputBorder(),
                             fillColor: Colors.transparent,
                             labelText: '密码',
@@ -165,10 +185,60 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() {
-    ToastUtil.showShort('登录');
+    print('_login before: _username=$_username, _pwd=$_pwd');
+    _username = nameEditController.text;
+    _pwd = pwdEditController.text;
+    print('_login after: _username=$_username, _pwd=$_pwd');
+
+    if (_username == null || _username.isEmpty) {
+      ToastUtil.showShort('请填写用户名');
+      return;
+    }
+    if (_pwd == null || _pwd.isEmpty) {
+      ToastUtil.showShort('请填写密码');
+      return;
+    }
+    final FormState form = _formKey.currentState;
+    form.save();
+    if (form.validate()) {
+      CommonUtil.showLoading(context);
+      WanRequest().login(_username, _pwd).then((result) {
+        Navigator.pop(context);
+        ToastUtil.showShort('登录成功');
+        Constant.isLogin = true;
+        _setUser(result);
+        bus.fire(LoginEvent(data: result));
+        Navigator.pop(context);
+      }).catchError((e) {
+        Navigator.pop(context);
+        ToastUtil.showShort(e.message);
+      });
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text('请检查用户名和密码'))
+      );
+    }
   }
 
   void _register() {
-    ToastUtil.showShort('注册');
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RegisterPage(),
+            fullscreenDialog: true
+        )
+    ).then((dto) {
+      if (dto != null) {
+        ToastUtil.showShort('注册成功');
+        Constant.isLogin = true;
+        _setUser(dto);
+        bus.fire(LoginEvent(data: dto));
+        Navigator.pop(context);
+      }
+    });
+  }
+
+  void _setUser(LoginDTO user) async {
+    SpUtil.setString(Constant.spUserName, user.username);
   }
 }
