@@ -60,7 +60,7 @@ class _HomeArticleState extends State<HomeArticleItem> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    padding: EdgeInsets.only(top: 10),
                     child: Text(
                       widget.article.title,
                       maxLines: 2,

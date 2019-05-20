@@ -1,18 +1,19 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/conf/constant.dart';
 import 'package:wanandroid/event/event.dart';
 import 'package:wanandroid/net/request.dart';
-import 'package:wanandroid/util/common_util.dart';
 import 'package:wanandroid/util/toast_util.dart';
+import 'package:wanandroid/widget/loading.dart';
 
 ///文章页面
 class ArticlePage extends StatefulWidget {
   final int id;
   final String title;
   final String url;
-  final bool fav;
+  final bool fav; //是否收藏
 
   ArticlePage(this.id, this.title, this.url, {this.fav}); //是否收藏
 
@@ -21,7 +22,7 @@ class ArticlePage extends StatefulWidget {
 }
 
 class ArticleState extends State<ArticlePage> {
-  bool _fav = false;
+  bool _fav;
 
   @override
   void initState() {
@@ -29,9 +30,16 @@ class ArticleState extends State<ArticlePage> {
     _fav = widget.fav;
   }
 
-  Widget _buildAppBar() {
+  @override
+  Widget build(BuildContext context) {
+    print('url:${widget.url}');
+
     AppBar _appbar;
-    if (_fav) {
+    if (_fav == null) {
+      _appbar = AppBar(
+        title: Text('文章'),
+      );
+    } else {
       _appbar = AppBar(
         title: Text(widget.title),
         actions: <Widget>[
@@ -49,42 +57,34 @@ class ArticleState extends State<ArticlePage> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {
-              CommonUtil.share(widget.url);
-            }
-          )
-        ],
-      );
-    } else {
-      _appbar = AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.open_in_browser),
-            onPressed: () {
-              launch(widget.url);
-            }
-          )
+              icon: Icon(Icons.open_in_browser),
+              onPressed: () {
+                launch(widget.url);
+              }
+          ),
+//          IconButton(
+//            icon: Icon(Icons.share),
+//            onPressed: () {
+//              CommonUtil.share(widget.url);
+//            }
+//          )
+
         ],
       );
     }
-    return _appbar;
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    print('title:${widget.title}');
-    print('url:${widget.url}');
     return WebviewScaffold(
-      appBar: _buildAppBar(),
+//      withZoom: false,
+//      withJavascript: true,
       url: widget.url,
-      withZoom: false,
-      withJavascript: true
+      appBar: _appbar,
+      initialChild: Center(
+        child: Loading(),
+      ),
     );
   }
 
-  void _favorite() {
+  _favorite() {
     if (_fav) {
       _cancelFavorite();
     } else {

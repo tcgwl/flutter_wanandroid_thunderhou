@@ -8,6 +8,9 @@ class StringUtil {
         .replaceAll("&ldquo;", "「")
         .replaceAll("&amp;", "&")
         .replaceAll("&quot;", "\"")
-        .replaceAll("&mdash;", "-");
+        .replaceAll("&mdash;", "-")
+        .replaceAll(RegExp("(<em[^>]*>)|(</em>)"), "")
+        .replaceAll(RegExp("\n{2,}"), "\n")
+        .replaceAll(RegExp("\s{2,}"), " ");
   }
 }

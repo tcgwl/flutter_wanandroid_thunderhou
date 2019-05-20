@@ -24,6 +24,7 @@ class _MinePageState extends State<MinePage> {
   @override
   void initState() {
     super.initState();
+    _getUser();
     bus.on<LoginEvent>().listen((event) {
       setState(() {
         if (event.data == null) {

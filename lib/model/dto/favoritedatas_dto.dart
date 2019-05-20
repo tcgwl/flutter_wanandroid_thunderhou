@@ -1,3 +1,5 @@
+import 'package:wanandroid/util/string_util.dart';
+
 ///收藏文章列表
 class FavoriteDatasDTO {
   int curPage;
@@ -89,7 +91,7 @@ class Datas {
     author = json['author'];
     chapterId = json['chapterId'];
     chapterName = json['chapterName'];
-    desc = json['desc'];
+    desc = StringUtil.handleSpecialChar(json['desc']);
     envelopePic = json['envelopePic'];
     id = json['id'];
     link = json['link'];
@@ -97,7 +99,7 @@ class Datas {
     origin = json['origin'];
     originId = json['originId'];
     publishTime = json['publishTime'];
-    title = json['title'];
+    title = StringUtil.handleSpecialChar(json['title']);
     userId = json['userId'];
     visible = json['visible'];
     zan = json['zan'];

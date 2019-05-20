@@ -42,6 +42,8 @@ dependencies:
   #loading indicators
   flutter_spinkit: ^3.1.0
   url_launcher: 5.0.2
+  #应用信息
+  package_info: ^0.3.2
 
 dev_dependencies:
   flutter_test:

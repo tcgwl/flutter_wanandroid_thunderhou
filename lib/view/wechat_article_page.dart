@@ -25,7 +25,7 @@ class _WechatArticlePageState extends State<WechatArticlePage> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _appbar = AppBar(title: Text('公众号'),);
+    _appbar = AppBar(title: Text('公众号'));
     _getData();
   }
 

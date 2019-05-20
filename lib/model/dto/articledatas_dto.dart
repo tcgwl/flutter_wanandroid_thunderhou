@@ -148,7 +148,7 @@ class Datas {
     chapterName = json['chapterName'];
     collect = json['collect'];
     courseId = json['courseId'];
-    desc = json['desc'];
+    desc = StringUtil.handleSpecialChar(json['desc']);
     envelopePic = json['envelopePic'];
     fresh = json['fresh'];
     id = json['id'];

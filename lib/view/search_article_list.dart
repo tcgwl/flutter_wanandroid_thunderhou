@@ -7,24 +7,27 @@ import 'package:wanandroid/net/request.dart';
 import 'package:wanandroid/util/toast_util.dart';
 import 'package:wanandroid/widget/empty_view.dart';
 import 'package:wanandroid/widget/error_view.dart';
-import 'package:wanandroid/widget/item_wechat_article.dart';
+import 'package:wanandroid/widget/item_home_article.dart';
 import 'package:wanandroid/widget/loading.dart';
 
-/// 公众号文章列表
-class WechatArticleListPage extends StatefulWidget {
-  final int sid;
+///搜索文章列表
+class ArticleList extends StatefulWidget {
+  final id;
   final String keyword;
 
-  WechatArticleListPage({Key key, this.sid, this.keyword: ''}): super(key: key);
+  const ArticleList({Key key, this.id, this.keyword: ''}) : super(key: key);
 
   @override
-  WechatArticleListState createState() => WechatArticleListState();
+  State<StatefulWidget> createState() {
+    return ArticleListState();
+  }
 }
 
-class WechatArticleListState extends State<WechatArticleListPage> with AutomaticKeepAliveClientMixin {
+class ArticleListState extends State<ArticleList>
+   with AutomaticKeepAliveClientMixin {
   PageStatus status = PageStatus.LOADING;
-  int index = 1;
-  List<Datas> articles = List();
+  int index = 0;
+  List<Datas> articles;
   ScrollController _scrollController = ScrollController();
 
   @override
@@ -37,7 +40,7 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
     _scrollController.addListener(() {
       var maxScrollExtent = _scrollController.position.maxScrollExtent;
       var pixels = _scrollController.position.pixels;
-      if (maxScrollExtent == pixels) {
+      if (maxScrollExtent == pixels) {//滑动到底部
         _loadMore();
       }
     });
@@ -58,17 +61,14 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
       case PageStatus.DATA:
         Widget listView = ListView.builder(
           itemCount: articles.length,
-          itemBuilder: (context, position) {
-            return WechatArticleItem(articles[position]);
+          itemBuilder: (context, index) {
+            return HomeArticleItem(articles[index]);
           },
           controller: _scrollController,
         );
-        return RefreshIndicator(
-          child: listView,
-          onRefresh: _refresh
-        );
+        return RefreshIndicator(child: listView, onRefresh: _refresh);
       case PageStatus.ERROR:
-        return ErrorView(onClick: () => _refresh());
+        return ErrorView(onClick: _refresh);
       case PageStatus.EMPTY:
       default:
         return EmptyView(
@@ -79,17 +79,14 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
     }
   }
 
-  //刷新
   Future<Null> _refresh() async {
-    index = 1;
-    WanRequest()
-        .getSubscriptionsHistory(index, widget.sid, widget.keyword)
-        .then((data) {
+    index = 0;
+    WanRequest().search(index, widget.keyword).then((data) {
       if (this.mounted) {
         setState(() {
           articles = data.datas;
           index++;
-          status = articles.length == 0 ? PageStatus.EMPTY: PageStatus.DATA;
+          status = articles.length == 0 ? PageStatus.EMPTY : PageStatus.DATA;
         });
       }
     }).catchError((e) {
@@ -101,10 +98,8 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
   }
 
   //加载数据
-  _loadMore() async {
-    WanRequest()
-        .getSubscriptionsHistory(index, widget.sid, widget.keyword)
-        .then((data) {
+  Future<Null> _loadMore() async {
+    WanRequest().search(index, widget.keyword).then((data) {
       setState(() {
         articles.addAll(data.datas);
         index++;
@@ -113,5 +108,4 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
       ToastUtil.showShort(e.message);
     });
   }
-
 }
