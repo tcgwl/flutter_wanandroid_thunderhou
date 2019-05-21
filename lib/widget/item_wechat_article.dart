@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wanandroid/conf/textsize_const.dart';
 import 'package:wanandroid/model/dto/articledatas_dto.dart';
-import 'package:wanandroid/view/article_page.dart';
+import 'package:wanandroid/util/Router.dart';
 
 /// 公众号文章列表条目
 class WechatArticleItem extends StatefulWidget {
@@ -18,16 +18,12 @@ class _WechatArticleState extends State<WechatArticleItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Router().openWeb(
             context,
-            MaterialPageRoute(
-              builder: (context) => ArticlePage(
-                widget.article.id,
-                widget.article.title,
-                widget.article.link,
-                fav: widget.article.collect,
-              ),
-            )
+            widget.article.id,
+            widget.article.title,
+            widget.article.link,
+            widget.article.collect
         );
       },
       child: Container(

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -13,7 +12,9 @@ import 'package:wanandroid/model/dto/articledatas_dto.dart';
 import 'package:wanandroid/model/dto/homebanner_dto.dart';
 import 'package:wanandroid/net/api.dart';
 import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/Router.dart';
 import 'package:wanandroid/util/toast_util.dart';
+import 'package:wanandroid/view/main_left_page.dart';
 import 'package:wanandroid/view/search_page.dart';
 import 'package:wanandroid/widget/empty_view.dart';
 import 'package:wanandroid/widget/error_view.dart';
@@ -71,15 +72,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchPage(SearchPage.Search_Type_Article))
-              );
+              Router().openSearch(context, SearchPage.Search_Type_Article);
             }
           )
         ],
       ),
       body: _buildBody(),
+      drawer: Drawer(
+        child: MainLeftPage(),
+      ),
     );
   }
 

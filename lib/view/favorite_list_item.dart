@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wanandroid/model/dto/favoritedatas_dto.dart';
-import 'package:wanandroid/view/article_page.dart';
+import 'package:wanandroid/util/Router.dart';
 
 class FavoriteListItemWidget extends StatefulWidget {
   final Datas data;
@@ -45,15 +45,13 @@ class ArticleListItemState extends State<FavoriteListItemWidget> {
         ),
         onTap: () {
           //点击跳转详情
-          Navigator.of(context)
-              .push(MaterialPageRoute<Null>(builder: (context) {
-            return ArticlePage(
-              widget.data.originId,
+          Router().openWeb(
+              context,
+              widget.data.id,
               widget.data.title,
               widget.data.link,
-              fav: true,
-            );
-          }));
+              true
+          );
         },
         contentPadding:
             EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),

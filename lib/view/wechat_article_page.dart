@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wanandroid/conf/page_status.dart';
 import 'package:wanandroid/model/dto/subscriptionslist_dto.dart';
 import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/Router.dart';
 import 'package:wanandroid/util/toast_util.dart';
 import 'package:wanandroid/view/search_page.dart';
 import 'package:wanandroid/view/wechat_article_list_page.dart';
@@ -76,12 +77,7 @@ class _WechatArticlePageState extends State<WechatArticlePage> with SingleTicker
         IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SearchPage(SearchPage.Search_Type_WeChat, sId: _currentSId)
-              )
-            );
+            Router().openSearch(context, SearchPage.Search_Type_WeChat, _currentSId);
           }
         )
       ],

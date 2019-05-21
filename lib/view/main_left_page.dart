@@ -13,14 +13,16 @@ import 'package:wanandroid/view/login_page.dart';
 import 'package:wanandroid/view/setting_page.dart';
 import 'package:wanandroid/view/todo_page.dart';
 
-/// '我的'页面
-class MinePage extends StatefulWidget {
+/// '抽屉'页面
+class MainLeftPage extends StatefulWidget {
   @override
-  _MinePageState createState() => _MinePageState();
+  _MainLeftPageState createState() => _MainLeftPageState();
 }
 
-class _MinePageState extends State<MinePage> {
+class _MainLeftPageState extends State<MainLeftPage> {
+  List<PageInfo> _pageInfoList = new List();
   String _username;
+  var statusBarHeight;
 
   @override
   void initState() {
@@ -35,6 +37,9 @@ class _MinePageState extends State<MinePage> {
         }
       });
     });
+    _pageInfoList.add(PageInfo('收藏', ImagePath.icFavorite, FavoritePage()));
+    _pageInfoList.add(PageInfo('TODO', ImagePath.icTodo, TodoPage()));
+    _pageInfoList.add(PageInfo('设置', ImagePath.icSetting, SettingPage()));
   }
 
   void _getUser() async {
@@ -72,33 +77,22 @@ class _MinePageState extends State<MinePage> {
 
   @override
   Widget build(BuildContext context) {
+    statusBarHeight = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-        appBar: AppBar(
-          title: Text('WanAndroid'),
-          centerTitle: true,
-          elevation: 0,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.settings),
-              onPressed: () {
-                Router().openPage(context, SettingPage());
-              }
-            )
-          ],//设置标题居中
-        ),
-        body: Column(
-          children: <Widget>[
-            _buildHeader(),
-            _buildItems(),
-          ],
-        )
+      body: Column(
+        children: <Widget>[
+          _buildHeader(),
+          _buildItems(),
+        ],
+      ),
     );
   }
 
   /// 用户头像,用户名
   _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(top: 20, bottom: 20),
+      padding: EdgeInsets.only(top: statusBarHeight, bottom: 10),
       color: Theme.of(context).primaryColor,
       child: Center(
         child: GestureDetector(
@@ -107,23 +101,23 @@ class _MinePageState extends State<MinePage> {
               Router().openPage(context, LoginPage());
             } else {
               showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  content: const Text('确定要退出登录吗?'),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: const Text('取消'),
-                      onPressed: () => Router().back(context),
-                    ),
-                    FlatButton(
-                      child: const Text('确定'),
-                      onPressed: () {
-                        Router().back(context);
-                        _logout();
-                      }
-                    ),
-                  ],
-                )
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: const Text('确定要退出登录吗?'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: const Text('取消'),
+                        onPressed: () => Router().back(context),
+                      ),
+                      FlatButton(
+                          child: const Text('确定'),
+                          onPressed: () {
+                            Router().back(context);
+                            _logout();
+                          }
+                      ),
+                    ],
+                  )
               );
             }
           },
@@ -148,53 +142,48 @@ class _MinePageState extends State<MinePage> {
   }
 
   _buildItems() {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: 5,
-        ),
-        _buildInkWell(FavoritePage(), ImagePath.icFavorite, '我的收藏'),
-        Divider(),
-        _buildInkWell(TodoPage(), ImagePath.icTodo, 'TODO'),
-
-      ],
-    );
-  }
-
-  _buildInkWell(Widget widget, String iconPath, String title) {
-    return InkWell( // 带波浪纹
-      onTap: () {
-        if (Constant.isLogin) {
-          Router().openPage(context, widget);
-        } else {
-          ToastUtil.showShort('请先登录');
-          Router().openPage(context, LoginPage());
-        }
-      },
-      child: Container(
-        height: 40,
-        child: Row(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 15),
-              child: Image.asset(
-                iconPath,
+    return Expanded(
+      flex: 1,
+      child: ListView.builder(
+          padding: const EdgeInsets.all(0.0),
+          itemCount: _pageInfoList.length,
+          itemBuilder: (BuildContext context, int index) {
+            PageInfo pageInfo = _pageInfoList[index];
+            return ListTile(
+              leading: Image.asset(
+                pageInfo.iconPath,
                 color: Theme.of(context).primaryColorLight,
                 width: 25,
               ),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(left: 5),
-                child: Text(
-                  title,
-                  style: TextStyle(fontSize: TextSizeConst.middleTextSize),
-                ),
+              title: Text(
+                pageInfo.title,
+                style: TextStyle(fontSize: TextSizeConst.middleTextSize),
               ),
-            )
-          ],
-        ),
+              onTap: () {
+                if (pageInfo.title == '设置') {
+                  Router().openPage(context, pageInfo.page);
+                } else {
+                  if (Constant.isLogin) {
+                    Router().openPage(context, pageInfo.page);
+                  } else {
+                    ToastUtil.showShort('请先登录');
+                    Router().openPage(context, LoginPage());
+                  }
+                }
+              },
+            );
+          }
       ),
     );
   }
+
+}
+
+class PageInfo {
+  PageInfo(this.title, this.iconPath, this.page, [this.withScaffold = true]);
+
+  String title;
+  String iconPath;
+  Widget page;
+  bool withScaffold;
 }

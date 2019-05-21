@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/Router.dart';
 import 'package:wanandroid/util/common_util.dart';
 import 'package:wanandroid/util/toast_util.dart';
 import 'package:wanandroid/widget/arc_clipper.dart';
@@ -219,11 +220,11 @@ class _RegisterPageState extends State<RegisterPage> {
     if (form.validate()) {
       CommonUtil.showLoading(context);
       WanRequest().register(_username, _pwd, _pwd).then((result) {
-        Navigator.pop(context);
+        Router().back(context);
         ToastUtil.showShort('注册成功');
-        Navigator.pop(context, result);
+        Router().back(context, result);
       }).catchError((e) {
-        Navigator.pop(context);
+        Router().back(context);
         ToastUtil.showShort(e.message);
       });
     } else {

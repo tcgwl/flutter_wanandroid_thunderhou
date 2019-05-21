@@ -21,6 +21,7 @@ class WanApp extends StatefulWidget {
 
 class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
   var _titles = ['首页', '导航', '公众号', '项目', '我的']; //导航栏标题
+//  var _titles = ['首页', '导航', '公众号', '项目', '我的']; //导航栏标题
   var _pageController;
   int _tabIndex = 0;
   bool _dark = false;
@@ -107,7 +108,7 @@ class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
           NavPage(),
           WechatArticlePage(),
           AOSPPage(),
-          MinePage(),
+//          MinePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -116,7 +117,7 @@ class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
           BottomNavigationBarItem(icon: Icon(Icons.language), title: _getNavText(1)),
           BottomNavigationBarItem(icon: Icon(Icons.wb_cloudy), title: _getNavText(2)),
           BottomNavigationBarItem(icon: Icon(Icons.apps), title: _getNavText(3)),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: _getNavText(4)),
+//          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: _getNavText(4)),
         ],
         currentIndex: _tabIndex,
         type: BottomNavigationBarType.fixed,

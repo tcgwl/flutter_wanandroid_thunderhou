@@ -3,8 +3,8 @@ import 'package:wanandroid/conf/page_status.dart';
 import 'package:wanandroid/model/dto/navi_dto.dart';
 import 'package:wanandroid/model/vo/flowitem_vo.dart';
 import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/Router.dart';
 import 'package:wanandroid/util/toast_util.dart';
-import 'package:wanandroid/view/article_page.dart';
 import 'package:wanandroid/widget/error_view.dart';
 import 'package:wanandroid/widget/flow_items.dart';
 import 'package:wanandroid/widget/loading.dart';
@@ -58,10 +58,11 @@ class _NavPageState extends State<NavPage> with SingleTickerProviderStateMixin {
             (Articles a) => FlowItemVO(a.id, a.title, a.link)
           ).toList(),
           onPress: (item) {
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) => ArticlePage(item.id, item.name, item.link)
-                )
+            Router().openWeb(
+                context,
+                item.id,
+                item.name,
+                item.link
             );
           },
         )

@@ -3,10 +3,10 @@ import 'package:wanandroid/conf/constant.dart';
 import 'package:wanandroid/event/event.dart';
 import 'package:wanandroid/model/dto/login_dto.dart';
 import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/Router.dart';
 import 'package:wanandroid/util/common_util.dart';
 import 'package:wanandroid/util/sp_util.dart';
 import 'package:wanandroid/util/toast_util.dart';
-import 'package:wanandroid/view/register_page.dart';
 import 'package:wanandroid/widget/arc_clipper.dart';
 import 'package:wanandroid/widget/pwd_field.dart';
 
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => Router().back(context),
         label: const Text('取消'),
         icon: const Icon(Icons.close),
       ),
@@ -203,14 +203,14 @@ class _LoginPageState extends State<LoginPage> {
     if (form.validate()) {
       CommonUtil.showLoading(context);
       WanRequest().login(_username, _pwd).then((result) {
-        Navigator.pop(context);
+        Router().back(context);
         ToastUtil.showShort('登录成功');
         Constant.isLogin = true;
         _setUser(result);
         bus.fire(LoginEvent(data: result));
-        Navigator.pop(context);
+        Router().back(context);
       }).catchError((e) {
-        Navigator.pop(context);
+        Router().back(context);
         ToastUtil.showShort(e.message);
       });
     } else {
@@ -221,19 +221,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _register() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => RegisterPage(),
-            fullscreenDialog: true
-        )
-    ).then((dto) {
+    Router().openRegister(context).then((dto) {
       if (dto != null) {
         ToastUtil.showShort('注册成功');
         Constant.isLogin = true;
         _setUser(dto);
         bus.fire(LoginEvent(data: dto));
-        Navigator.pop(context);
+        Router().back(context);
       }
     });
   }

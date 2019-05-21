@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wanandroid/conf/textsize_const.dart';
 import 'package:wanandroid/model/dto/project_list_dto.dart';
-import 'package:wanandroid/view/article_page.dart';
+import 'package:wanandroid/util/Router.dart';
 
 /// 项目列表条目
 class ProjectItem extends StatefulWidget {
@@ -18,16 +18,12 @@ class _ProjectState extends State<ProjectItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Router().openWeb(
             context,
-            MaterialPageRoute(
-              builder: (context) => ArticlePage(
-                widget.project.id,
-                widget.project.title,
-                widget.project.link,
-                fav: widget.project.collect,
-              ),
-            )
+            widget.project.id,
+            widget.project.title,
+            widget.project.link,
+            widget.project.collect
         );
       },
       child: Card(

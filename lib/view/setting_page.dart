@@ -4,6 +4,7 @@ import 'package:wanandroid/conf/imgs.dart';
 import 'package:wanandroid/conf/textsize_const.dart';
 import 'package:wanandroid/conf/themes.dart';
 import 'package:wanandroid/event/event.dart';
+import 'package:wanandroid/util/Router.dart';
 import 'package:wanandroid/util/sp_util.dart';
 import 'package:wanandroid/util/toast_util.dart';
 import 'package:wanandroid/view/about_page.dart';
@@ -57,7 +58,7 @@ class _SettingPageState extends State<SettingPage> {
         ],
       ),
       onPressed: () {
-        Navigator.pop(context, themes.indexOf(t));
+        Router().back(context, themes.indexOf(t));
       },
     )).toList();
   }
@@ -163,7 +164,7 @@ class _SettingPageState extends State<SettingPage> {
           ToastUtil.showShort('建议与反馈');
           //Navigator.push(context, MaterialPageRoute(builder: (context) => FeedbackPage()));
         } else if (position == 2) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AboutPage()));
+          Router().openPage(context, AboutPage());
         }
       },
       child: Container(
