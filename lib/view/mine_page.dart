@@ -129,9 +129,21 @@ class _MinePageState extends State<MinePage> {
           },
           child: Column(
             children: <Widget>[
-              Image.asset(
-                ImagePath.icAvatar,
-                width: 80,
+//              Image.asset(
+//                ImagePath.icAvatar,
+//                width: 80,
+//              ),
+              Container(
+                width: 80.0,
+                height: 80.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: AssetImage(
+                      ImagePath.icCartoon,
+                    ),
+                  ),
+                ),
               ),
               SizedBox(
                 height: 8,

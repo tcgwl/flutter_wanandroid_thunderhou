@@ -130,6 +130,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         pagination: _pagination(),
         viewportFraction: 0.8,
         scale: 0.9,
+        onTap: (index) {
+          var banner = banners[index];
+          Router().openWeb(context, banner.id, banner.title, banner.url);
+        },
       ) : SizedBox(width: 0, height: 0,)
     );
   }

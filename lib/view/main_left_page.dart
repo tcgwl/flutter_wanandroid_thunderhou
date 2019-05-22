@@ -92,9 +92,12 @@ class _MainLeftPageState extends State<MainLeftPage> {
   /// 用户头像,用户名
   _buildHeader() {
     return Container(
-      padding: EdgeInsets.only(top: statusBarHeight, bottom: 10),
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(top: statusBarHeight, bottom: 15),
+      width: double.infinity,
       color: Theme.of(context).primaryColor,
-      child: Center(
+      child: Padding(
+        padding: EdgeInsets.only(left: 20),
         child: GestureDetector(
           onTap: () {
             if (!Constant.isLogin) {
@@ -122,18 +125,35 @@ class _MainLeftPageState extends State<MainLeftPage> {
             }
           },
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.asset(
-                ImagePath.icAvatar,
-                width: 80,
+//              Image.asset(
+//                ImagePath.icAvatar,
+//                width: 80,
+//              ),
+              Container(
+                width: 80.0,
+                height: 80.0,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: AssetImage(
+                      ImagePath.icCartoon,
+                    ),
+                  ),
+                ),
               ),
-              SizedBox(
-                height: 8,
+              Padding(
+                padding: EdgeInsets.only(top: 8, bottom: 3),
+                child: Text(
+                  _username == null ? '未登录' : _username,
+                  style: TextStyle(color: Colors.white, fontSize: TextSizeConst.normalTextSize),
+                ),
               ),
               Text(
-                _username == null ? '未登录' : _username,
-                style: TextStyle(color: Colors.white, fontSize: TextSizeConst.middleTextSize),
-              )
+                "心有猛虎，细嗅蔷薇。",
+                style: TextStyle(color: Colors.white70),
+              ),
             ],
           ),
         ),

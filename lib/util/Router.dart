@@ -33,10 +33,32 @@ class Router {
     );
   }
 
-  openPage(BuildContext context, Widget widget) {
+  openPage(BuildContext context, Widget widget, [bool fullscreenDialog]) {
+    if (fullscreenDialog == null) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => widget)
+      );
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => widget,
+            fullscreenDialog: fullscreenDialog
+          )
+      );
+    }
+  }
+
+  openPageWithAnim(BuildContext context, Widget widget, [int milliseconds = 500]) {
     Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => widget)
+      context,
+      PageRouteBuilder(
+          pageBuilder: (BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation) => widget,
+          transitionDuration: Duration(milliseconds: milliseconds)
+      ),
     );
   }
 
@@ -50,7 +72,7 @@ class Router {
     );
   }
 
-  back<T extends Object>(BuildContext context, [ T result ]) {
+  back<T extends Object>(BuildContext context, [T result]) {
     Navigator.of(context).pop<T>(result);
   }
 

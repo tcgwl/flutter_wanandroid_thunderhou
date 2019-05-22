@@ -21,6 +21,7 @@ import 'package:wanandroid/model/dto/todolist_dto.dart';
 import 'package:wanandroid/model/dto/todolist_get_dto.dart';
 import 'package:wanandroid/model/dto/update_dto.dart';
 import 'package:wanandroid/net/api.dart';
+import 'package:wanandroid/net/log_interceptor.dart';
 import 'package:wanandroid/net/request.dart';
 
 class WanRequestImpl extends WanRequest {
@@ -32,7 +33,7 @@ class WanRequestImpl extends WanRequest {
         receiveTimeout: 3000
     );
     _dio = Dio(options);
-    _dio.interceptors.add(LogInterceptor());
+    _dio.interceptors.add(WanLogInterceptor());
 
     _setPersistCookieJar();
   }

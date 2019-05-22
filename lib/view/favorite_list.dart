@@ -93,7 +93,9 @@ class FavoriteListState extends State<FavoriteList> {
       }
     }).catchError((e) {
       ToastUtil.showShort(e.message);
-      status = PageStatus.ERROR;
+      setState(() {
+        status = PageStatus.ERROR;
+      });
     });
   }
 

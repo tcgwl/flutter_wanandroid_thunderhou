@@ -114,7 +114,7 @@ class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), title: _getNavText(0)),
-          BottomNavigationBarItem(icon: Icon(Icons.language), title: _getNavText(1)),
+          BottomNavigationBarItem(icon: Icon(Icons.navigation), title: _getNavText(1)),
           BottomNavigationBarItem(icon: Icon(Icons.wb_cloudy), title: _getNavText(2)),
           BottomNavigationBarItem(icon: Icon(Icons.apps), title: _getNavText(3)),
 //          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: _getNavText(4)),

@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wanandroid/conf/constant.dart';
 import 'package:wanandroid/event/event.dart';
 import 'package:wanandroid/net/request.dart';
+import 'package:wanandroid/util/common_util.dart';
 import 'package:wanandroid/util/toast_util.dart';
 import 'package:wanandroid/widget/loading.dart';
 
@@ -37,50 +38,66 @@ class ArticleState extends State<ArticlePage> {
     AppBar _appbar;
     if (_fav == null) {
       _appbar = AppBar(
-        title: Text('文章'),
+        title: Text(widget.title),
+        actions: <Widget>[
+          _buildOpenWithBrowser(),
+        ],
       );
     } else {
       _appbar = AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Constant.isLogin && _fav ? Icons.favorite : Icons.favorite_border,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              if (Constant.isLogin) {
-                _favorite();
-              } else {
-                ToastUtil.showShort('请先登录');
-              }
-            },
-          ),
-          IconButton(
-              icon: Icon(Icons.open_in_browser),
-              onPressed: () {
-                launch(widget.url);
-              }
-          ),
-//          IconButton(
-//            icon: Icon(Icons.share),
-//            onPressed: () {
-//              CommonUtil.share(widget.url);
-//            }
-//          )
-
+          _buildFavorite(),
+          _buildOpenWithBrowser(),
+//          _buildShare(),
         ],
       );
     }
 
     return WebviewScaffold(
-//      withZoom: false,
-//      withJavascript: true,
       url: widget.url,
+      withZoom: false,
+      withLocalStorage: true,
+      hidden: true,
+      withJavascript: true,
       appBar: _appbar,
       initialChild: Center(
         child: Loading(),
       ),
+    );
+  }
+
+  _buildFavorite() {
+    return IconButton(
+      icon: Icon(
+        Constant.isLogin && _fav ? Icons.favorite : Icons.favorite_border,
+        color: Colors.white,
+      ),
+      onPressed: () {
+        if (Constant.isLogin) {
+          _favorite();
+        } else {
+          ToastUtil.showShort('请先登录');
+        }
+      },
+    );
+  }
+
+  _buildOpenWithBrowser() {
+    return IconButton(
+      icon: Icon(Icons.open_in_new),
+      onPressed: () {
+        launch(widget.url);
+      }
+    );
+  }
+
+  _buildShare() {
+    return IconButton(
+        icon: Icon(Icons.share),
+        onPressed: () {
+          CommonUtil.share(widget.url);
+        }
     );
   }
 
@@ -113,4 +130,5 @@ class ArticleState extends State<ArticlePage> {
       ToastUtil.showShort(e.message);
     });
   }
+
 }
