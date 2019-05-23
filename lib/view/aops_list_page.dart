@@ -9,6 +9,7 @@ import 'package:wanandroid/widget/empty_view.dart';
 import 'package:wanandroid/widget/error_view.dart';
 import 'package:wanandroid/widget/item_project.dart';
 import 'package:wanandroid/widget/loading.dart';
+import 'package:wanandroid/widget/pullrefresh/pullrefresh.dart';
 
 /// 项目列表页
 class AOSPListPage extends StatefulWidget {
@@ -23,8 +24,8 @@ class AOSPListPage extends StatefulWidget {
 class _AOSPListState extends State<AOSPListPage> with AutomaticKeepAliveClientMixin {
   PageStatus status = PageStatus.LOADING;
   int index = 1;
+  bool hasMoreData = false;
   List<Project> projects = List();
-  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -32,13 +33,6 @@ class _AOSPListState extends State<AOSPListPage> with AutomaticKeepAliveClientMi
     _refresh();
     bus.on<FavoriteEvent>().listen((event) {
       _refresh();
-    });
-    _scrollController.addListener(() {
-      var maxScrollExtent = _scrollController.position.maxScrollExtent;
-      var pixels = _scrollController.position.pixels;
-      if (maxScrollExtent == pixels) {
-        _loadMore();
-      }
     });
   }
 
@@ -55,15 +49,16 @@ class _AOSPListState extends State<AOSPListPage> with AutomaticKeepAliveClientMi
       case PageStatus.LOADING:
         return Loading();
       case PageStatus.DATA:
-        Widget listView = ListView.builder(
-          itemCount: projects.length,
-          itemBuilder: (context, position) {
-            return ProjectItem(projects[position]);
-          },
-          controller: _scrollController,
+        return PullRefresh(
+          onRefresh: _refresh,
+          onLoadmore: _loadMore,
+          scrollView: ListView.builder(
+            itemBuilder: (context, position) {
+              return ProjectItem(projects[position]);
+            },
+            itemCount: projects.length,
+          ),
         );
-
-        return RefreshIndicator(child: listView, onRefresh: _refresh);
       case PageStatus.ERROR:
         return ErrorView(onClick: _refresh);
       case PageStatus.EMPTY:
@@ -76,15 +71,24 @@ class _AOSPListState extends State<AOSPListPage> with AutomaticKeepAliveClientMi
     }
   }
 
-  //刷新
+  ///刷新
   Future<Null> _refresh() async {
     index = 1;
     WanRequest().getProjectList(widget.pid, index).then((data) {
       if (this.mounted) {
         setState(() {
-          projects = data.datas;
-          index++;
-          status = projects.length == 0 ? PageStatus.EMPTY: PageStatus.DATA;
+          if (data != null && data.datas.length > 0) {
+            projects = data.datas;
+            if (data.total > projects.length) {
+              index++;
+              hasMoreData = true;
+            } else {
+              hasMoreData = false;
+            }
+            status = projects.length == 0 ? PageStatus.EMPTY: PageStatus.DATA;
+          } else {
+            status = PageStatus.EMPTY;
+          }
         });
       }
     }).catchError((e) {
@@ -95,16 +99,25 @@ class _AOSPListState extends State<AOSPListPage> with AutomaticKeepAliveClientMi
     });
   }
 
-  //加载数据
+  ///加载数据
   _loadMore() async {
-    WanRequest().getProjectList(widget.pid, index).then((data) {
-      setState(() {
-        projects.addAll(data.datas);
-        index++;
+    if (hasMoreData) {
+      WanRequest().getProjectList(widget.pid, index).then((data) {
+        setState(() {
+          projects.addAll(data.datas);
+          if (data.total > projects.length) {
+            index++;
+            hasMoreData = true;
+          } else {
+            hasMoreData = false;
+          }
+        });
+      }).catchError((e) {
+        ToastUtil.showShort(e.message);
       });
-    }).catchError((e) {
-      ToastUtil.showShort(e.message);
-    });
+    } else {
+      ToastUtil.showNoMoreData();
+    }
   }
 
 }

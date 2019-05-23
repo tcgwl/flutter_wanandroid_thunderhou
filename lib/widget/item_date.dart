@@ -16,7 +16,8 @@ class DateItem extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: theme.dividerColor))),
+            border: Border(bottom: BorderSide(color: theme.dividerColor))
+        ),
         child: InkWell(
             onTap: () {
               showDatePicker(
@@ -43,6 +44,9 @@ class DateItem extends StatelessWidget {
                       '-' +
                       date.day.toString()),
                   const Icon(Icons.arrow_drop_down, color: Colors.black54),
-                ])));
+                ]
+            )
+        )
+    );
   }
 }

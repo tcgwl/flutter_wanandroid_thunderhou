@@ -56,7 +56,7 @@ class ArticleState extends State<ArticlePage> {
 
     return WebviewScaffold(
       url: widget.url,
-      withZoom: false,
+      withZoom: true,
       withLocalStorage: true,
       hidden: true,
       withJavascript: true,

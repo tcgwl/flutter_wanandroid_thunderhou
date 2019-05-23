@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wanandroid/view/favorite_list.dart';
+import 'package:wanandroid/view/favorite_list_page.dart';
 
 /// '收藏'页面
 class FavoritePage extends StatefulWidget {

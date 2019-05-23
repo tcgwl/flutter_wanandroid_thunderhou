@@ -93,7 +93,7 @@ class _MainLeftPageState extends State<MainLeftPage> {
   _buildHeader() {
     return Container(
       alignment: Alignment.topLeft,
-      padding: EdgeInsets.only(top: statusBarHeight, bottom: 15),
+      padding: EdgeInsets.only(top: (statusBarHeight + 10), bottom: 15),
       width: double.infinity,
       color: Theme.of(context).primaryColor,
       child: Padding(

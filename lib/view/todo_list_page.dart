@@ -55,9 +55,9 @@ class TodoListState extends State<TodoListPage> {
   _refresh() async {
     index = 1;
     WanRequest().getTodoList(index, _dto).then((data) {
-      if (data.datas != null) {
-        if (this.mounted) {
-          setState(() {
+      if (this.mounted) {
+        setState(() {
+          if (data.datas != null && data.datas.length > 0) {
             _listItems = data.datas.map(
               (TodoDTO dto) => TodoItem(
                 dto,
@@ -66,10 +66,10 @@ class TodoListState extends State<TodoListPage> {
             ).toList();
             index++;
             status = _listItems.length == 0 ? PageStatus.EMPTY : PageStatus.DATA;
-          });
-        }
-      } else {
-        status = PageStatus.EMPTY;
+          } else {
+            status = PageStatus.EMPTY;
+          }
+        });
       }
     }).catchError((e) {
       ToastUtil.showShort(e.message);

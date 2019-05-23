@@ -9,6 +9,7 @@ import 'package:wanandroid/widget/empty_view.dart';
 import 'package:wanandroid/widget/error_view.dart';
 import 'package:wanandroid/widget/item_home_article.dart';
 import 'package:wanandroid/widget/loading.dart';
+import 'package:wanandroid/widget/pullrefresh/pullrefresh.dart';
 
 ///搜索文章列表
 class ArticleList extends StatefulWidget {
@@ -23,12 +24,12 @@ class ArticleList extends StatefulWidget {
   }
 }
 
-class ArticleListState extends State<ArticleList>
-   with AutomaticKeepAliveClientMixin {
+class ArticleListState extends State<ArticleList> with AutomaticKeepAliveClientMixin {
+  GlobalKey<PullRefreshState> _key = GlobalKey();
   PageStatus status = PageStatus.LOADING;
   int index = 0;
+  bool hasMoreData = false;
   List<Datas> articles;
-  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -36,13 +37,6 @@ class ArticleListState extends State<ArticleList>
     _refresh();
     bus.on<FavoriteEvent>().listen((event) {
       _refresh();
-    });
-    _scrollController.addListener(() {
-      var maxScrollExtent = _scrollController.position.maxScrollExtent;
-      var pixels = _scrollController.position.pixels;
-      if (maxScrollExtent == pixels) {//滑动到底部
-        _loadMore();
-      }
     });
   }
 
@@ -59,14 +53,17 @@ class ArticleListState extends State<ArticleList>
       case PageStatus.LOADING:
         return Loading();
       case PageStatus.DATA:
-        Widget listView = ListView.builder(
-          itemCount: articles.length,
-          itemBuilder: (context, index) {
-            return HomeArticleItem(articles[index]);
-          },
-          controller: _scrollController,
+        return PullRefresh(
+          key: _key,
+          onRefresh: _refresh,
+          onLoadmore: _loadMore,
+          scrollView: ListView.builder(
+            itemBuilder: (context, index) {
+              return HomeArticleItem(articles[index]);
+            },
+            itemCount: articles.length,
+          )
         );
-        return RefreshIndicator(child: listView, onRefresh: _refresh);
       case PageStatus.ERROR:
         return ErrorView(onClick: _refresh);
       case PageStatus.EMPTY:
@@ -84,9 +81,18 @@ class ArticleListState extends State<ArticleList>
     WanRequest().search(index, widget.keyword).then((data) {
       if (this.mounted) {
         setState(() {
-          articles = data.datas;
-          index++;
-          status = articles.length == 0 ? PageStatus.EMPTY : PageStatus.DATA;
+          if (data != null && data.datas.length > 0) {
+            articles = data.datas;
+            if (data.total > articles.length) {
+              index++;
+              hasMoreData = true;
+            } else {
+              hasMoreData = false;
+            }
+            status = articles.length == 0 ? PageStatus.EMPTY : PageStatus.DATA;
+          } else {
+            status = PageStatus.EMPTY;
+          }
         });
       }
     }).catchError((e) {
@@ -97,15 +103,24 @@ class ArticleListState extends State<ArticleList>
     });
   }
 
-  //加载数据
+  ///加载数据
   Future<Null> _loadMore() async {
-    WanRequest().search(index, widget.keyword).then((data) {
-      setState(() {
-        articles.addAll(data.datas);
-        index++;
+    if (hasMoreData) {
+      WanRequest().search(index, widget.keyword).then((data) {
+        setState(() {
+          articles.addAll(data.datas);
+          if (data.total > articles.length) {
+            index++;
+            hasMoreData = true;
+          } else {
+            hasMoreData = false;
+          }
+        });
+      }).catchError((e) {
+        ToastUtil.showShort(e.message);
       });
-    }).catchError((e) {
-      ToastUtil.showShort(e.message);
-    });
+    } else {
+      ToastUtil.showNoMoreData();
+    }
   }
 }

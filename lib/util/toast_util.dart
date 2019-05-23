@@ -9,4 +9,7 @@ class ToastUtil {
       timeInSecForIos: 1
     );
   }
+  static void showNoMoreData() {
+    showShort('已经到底啦');
+  }
 }

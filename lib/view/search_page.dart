@@ -3,7 +3,7 @@ import 'package:wanandroid/conf/imgs.dart';
 import 'package:wanandroid/model/dto/hotkey_dto.dart';
 import 'package:wanandroid/model/vo/flowitem_vo.dart';
 import 'package:wanandroid/net/request.dart';
-import 'package:wanandroid/view/search_article_list.dart';
+import 'package:wanandroid/view/search_list_page.dart';
 import 'package:wanandroid/view/wechat_article_list_page.dart';
 import 'package:wanandroid/widget/flow_items.dart';
 
