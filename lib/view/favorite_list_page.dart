@@ -12,16 +12,16 @@ import 'package:wanandroid/widget/loading.dart';
 import 'package:wanandroid/widget/pullrefresh/pullrefresh.dart';
 
 ///收藏列表
-class FavoriteList extends StatefulWidget {
-  const FavoriteList({Key key}) : super(key: key);
+class FavoriteListPage extends StatefulWidget {
+  const FavoriteListPage({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return FavoriteListState();
+    return FavoriteListPageState();
   }
 }
 
-class FavoriteListState extends State<FavoriteList> {
+class FavoriteListPageState extends State<FavoriteListPage> {
   GlobalKey<PullRefreshState> _key = GlobalKey();
   PageStatus status = PageStatus.LOADING;
   int index = 0;

@@ -54,7 +54,7 @@ class _WechatArticlePageState extends State<WechatArticlePage> with SingleTicker
         (SubscriptionsDTO d) => Tab(text: d.name)
       ).toList();
       _tabPages = data.map<WechatArticleListPage>(
-          (SubscriptionsDTO d) => WechatArticleListPage(sid: d.id)
+          (SubscriptionsDTO d) => WechatArticleListPage(ValueKey(d.id.toString()))
       ).toList();
 
       setState(() {

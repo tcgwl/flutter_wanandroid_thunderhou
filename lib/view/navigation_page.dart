@@ -21,7 +21,6 @@ class _NavPageState extends State<NavPage> with SingleTickerProviderStateMixin {
   List<Tab> _tabs = List();
   List<FlowItemsWidget> _tabPages = List();
   Widget _appbar;
-  Widget _body;
 
   @override
   void initState() {

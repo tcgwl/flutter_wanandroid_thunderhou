@@ -17,5 +17,5 @@ class ImagePath {
   static String icAbout = 'images/ic_about.png';
   static String icWechat = 'images/ic_wechat.png';
   static String icMail = 'images/ic_mail.png';
-  static String icDefault = 'images/image_default.png';
+  static String icProjectDefault = 'images/default_project_img.png';
 }

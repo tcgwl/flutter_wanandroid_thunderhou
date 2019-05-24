@@ -81,7 +81,7 @@ flutter:
     - images/ic_error.png
     - images/ic_empty.png
     - images/ic_todo_empty.png
-    - images/image_default.png
+    - images/default_project_img.png
 
     - images/card_w.jpg
     - images/card_s.jpg

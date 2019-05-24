@@ -5,6 +5,7 @@ import 'package:wanandroid/model/dto/homebanner_dto.dart';
 import 'package:wanandroid/model/dto/hotkey_dto.dart';
 import 'package:wanandroid/model/dto/login_dto.dart';
 import 'package:wanandroid/model/dto/navi_dto.dart';
+import 'package:wanandroid/model/dto/tree_dto.dart';
 import 'package:wanandroid/model/dto/project_classify_dto.dart';
 import 'package:wanandroid/model/dto/project_list_dto.dart';
 import 'package:wanandroid/model/dto/subscriptions_dto.dart';
@@ -37,6 +38,12 @@ abstract class WanRequest {
 
   ///获取导航数据
   Future<List<NaviDTO>> getNavi();
+
+  ///获取知识体系数据
+  Future<List<TreeDTO>> getTree();
+
+  ///获取知识体系下的文章
+  Future<ArticleDatasDTO> getTreeArticles(int page, int cid);
 
   ///获取搜索热词
   Future<List<HotKeyDTO>> getHotKey();

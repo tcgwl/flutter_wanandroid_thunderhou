@@ -7,34 +7,23 @@ import 'package:wanandroid/net/request.dart';
 import 'package:wanandroid/util/toast_util.dart';
 import 'package:wanandroid/widget/empty_view.dart';
 import 'package:wanandroid/widget/error_view.dart';
-import 'package:wanandroid/widget/item_wechat_article.dart';
+import 'package:wanandroid/widget/item_home_article.dart';
 import 'package:wanandroid/widget/loading.dart';
 import 'package:wanandroid/widget/pullrefresh/pullrefresh.dart';
 
-/// 公众号文章列表
-class WechatArticleListPage extends StatefulWidget {
-  int sid;
-  String keyword;
+/// '知识体系'文章列表
+class TreeArticleListPage extends StatefulWidget {
+  final int cid;
 
-  WechatArticleListPage(ValueKey<String> key) : super(key: key) {
-    var paramStr = key.value.toString();
-    if (paramStr.contains('_')) {
-      List<String> paramList = paramStr.split('_');
-      sid = int.parse(paramList[0]);
-      keyword = paramList[1];
-    } else {
-      sid = int.parse(paramStr);
-      keyword = '';
-    }
-  }
+  TreeArticleListPage(this.cid);
 
   @override
-  WechatArticleListState createState() => WechatArticleListState();
+  TreeArticleListState createState() => TreeArticleListState();
 }
 
-class WechatArticleListState extends State<WechatArticleListPage> with AutomaticKeepAliveClientMixin {
+class TreeArticleListState extends State<TreeArticleListPage> with AutomaticKeepAliveClientMixin {
   PageStatus status = PageStatus.LOADING;
-  int index = 1;
+  int index = 0;
   bool hasMoreData = false;
   List<Datas> articles = List();
 
@@ -66,7 +55,7 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
           onLoadmore: _loadMore,
           scrollView: ListView.builder(
             itemBuilder: (context, position) {
-              return WechatArticleItem(articles[position]);
+              return HomeArticleItem(articles[position]);
             },
             itemCount: articles.length,
           ),
@@ -89,10 +78,8 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
 
   ///刷新
   Future<Null> _refresh() async {
-    index = 1;
-    WanRequest()
-        .getSubscriptionsHistory(index, widget.sid, widget.keyword)
-        .then((data) {
+    index = 0;
+    WanRequest().getTreeArticles(index, widget.cid).then((data) {
       if (this.mounted) {
         setState(() {
           if (data != null && data.datas.length > 0) {
@@ -120,9 +107,7 @@ class WechatArticleListState extends State<WechatArticleListPage> with Automatic
   ///加载数据
   _loadMore() async {
     if (hasMoreData) {
-      WanRequest()
-          .getSubscriptionsHistory(index, widget.sid, widget.keyword)
-          .then((data) {
+      WanRequest().getTreeArticles(index, widget.cid).then((data) {
         setState(() {
           articles.addAll(data.datas);
           if (data.total > articles.length) {

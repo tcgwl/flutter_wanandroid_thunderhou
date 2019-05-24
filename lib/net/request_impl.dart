@@ -10,6 +10,7 @@ import 'package:wanandroid/model/dto/homebanner_dto.dart';
 import 'package:wanandroid/model/dto/hotkey_dto.dart';
 import 'package:wanandroid/model/dto/login_dto.dart';
 import 'package:wanandroid/model/dto/navi_dto.dart';
+import 'package:wanandroid/model/dto/tree_dto.dart';
 import 'package:wanandroid/model/dto/project_classify_dto.dart';
 import 'package:wanandroid/model/dto/project_list_dto.dart';
 import 'package:wanandroid/model/dto/subscriptions_dto.dart';
@@ -90,6 +91,27 @@ class WanRequestImpl extends WanRequest {
     return data;
   }
 
+  ///获取知识体系数据
+  @override
+  Future<List<TreeDTO>> getTree() async {
+    Response response = await _dio.get(WanApi.tree);
+    List<TreeDTO> data = new List<TreeDTO>();
+    _handleResponse(response).forEach((v) {
+      data.add(TreeDTO.fromJson(v));
+    });
+    return data;
+  }
+
+  ///获取知识体系下的文章
+  @override
+  Future<ArticleDatasDTO> getTreeArticles(int page, int cid) async {
+    Response response = await _dio.get(
+        "${WanApi.homelist}$page/json",
+        queryParameters: {"cid": "$cid"}
+    );
+    return ArticleDatasDTO.fromJson(_handleResponse(response));
+  }
+
   ///获取搜索热词
   @override
   Future<List<HotKeyDTO>> getHotKey() async {
@@ -145,6 +167,7 @@ class WanRequestImpl extends WanRequest {
   Future<List<ProjectClassify>> getProjectClassify() async {
     Response response = await _dio.get(WanApi.projectClassify);
     List<ProjectClassify> data = new List<ProjectClassify>();
+    data.add(ProjectClassify(name: '最新项目', id: 0));
     _handleResponse(response).forEach((v) {
       data.add(ProjectClassify.fromJson(v));
     });
@@ -154,10 +177,16 @@ class WanRequestImpl extends WanRequest {
   ///获取项目列表
   @override
   Future<ProjectList> getProjectList(int cid, int page) async {
-    Response response = await _dio.get(
-      "${WanApi.projectList}$page/json",
-      queryParameters: {"cid": "$cid"}
-    );
+    Response response;
+    if (cid == 0) {//最新项目
+      response = await _dio.get("${WanApi.latestProjectList}$page/json");
+    } else {
+      response = await _dio.get(
+          "${WanApi.projectList}$page/json",
+          queryParameters: {"cid": "$cid"}
+      );
+    }
+
     return ProjectList.fromJson(_handleResponse(response));
   }
 

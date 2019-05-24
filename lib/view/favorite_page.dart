@@ -14,7 +14,7 @@ class _FavoritePageState extends State<FavoritePage> {
       appBar: AppBar(
         title: Text('我的收藏'),
       ),
-      body: FavoriteList(),
+      body: FavoriteListPage(),
     );
   }
 }

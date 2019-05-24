@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(

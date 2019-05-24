@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wanandroid/conf/imgs.dart';
 import 'package:wanandroid/conf/textsize_const.dart';
 import 'package:wanandroid/model/dto/project_list_dto.dart';
 import 'package:wanandroid/util/Router.dart';
@@ -35,7 +36,7 @@ class _ProjectState extends State<ProjectItem> {
                   FadeInImage.assetNetwork(
                       width: 120,
                       height: 240,
-                      placeholder: "images/image_default.png",
+                      placeholder: ImagePath.icProjectDefault,
                       image: widget.project.envelopePic
                   ),
                   Expanded(

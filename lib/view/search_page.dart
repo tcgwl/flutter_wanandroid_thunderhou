@@ -25,8 +25,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List<FlowItemVO> _hotkeys = List();
   FlowItemsWidget _hotkeyWidget;
-  GlobalKey<ArticleListState> _aKey = GlobalKey();
-  GlobalKey<WechatArticleListState> _sKey = GlobalKey();
+  ArticleListPage _articleListPage;
+  WechatArticleListPage _wechatArticleListPage;
+  TextEditingController _searchController = TextEditingController();
   String _keyword;
 
   @override
@@ -46,41 +47,38 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   _buildAppbar() {
+    TextField searchField = TextField(
+      controller: _searchController,
+      autofocus: true,
+      cursorColor: Colors.white,
+      textInputAction: TextInputAction.search,
+      style: TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: '搜索',
+      ),
+      onSubmitted: (str) {
+        _search(str);
+      },
+    );
+
     return AppBar(
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.maybePop(context);
-        }
-      ),
-      title: Theme(
-        data: Theme.of(context).copyWith(
-          hintColor: Colors.white70,
-          textTheme: TextTheme(
-            subhead: TextStyle(color: Colors.white)
-          )
-        ),
-        child: TextField(
-          autofocus: true,
-          cursorColor: Colors.white,
-          decoration: InputDecoration(
-            hintText: '搜索',
-            border: InputBorder.none,
-            suffixIcon: IconButton(
-              icon: Icon(Icons.search),
-              color: Colors.white,
-              onPressed: () {
-                if (_keyword != null && _keyword.isNotEmpty) {
-                  _search(_keyword);
-                }
-              }
-            )
-          ),
-          onChanged: (value) {
-            _keyword = value;
-          },
-        ),
-      ),
+      title: searchField,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            _search(_searchController.text);
+          }),
+        IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () {
+            setState(() {
+              _searchController.clear();
+              _keyword = null;
+            });
+          }),
+      ],
     );
   }
 
@@ -88,31 +86,26 @@ class _SearchPageState extends State<SearchPage> {
     if (widget.type == SearchPage.Search_Type_Article) {
       return _keyword == null || _keyword.isEmpty
           ? _hotkeyWidget
-          : ArticleList(
-              key: _aKey,
-              keyword: _keyword,
-            );
+          : _articleListPage;
     } else {
       return _keyword == null || _keyword.isEmpty
           ? Center(
               child: Image.asset(ImagePath.icEmpty),
             )
-          : WechatArticleListPage(
-              key: _sKey,
-              sid: widget.sId,
-              keyword: _keyword,
-            );
+          : _wechatArticleListPage;
     }
   }
 
   ///搜索
   void _search(String keyword) {
-    FocusScope.of(context).requestFocus(FocusNode());
-    if (widget.type == SearchPage.Search_Type_Article) {
-      _aKey.currentState.setState(() {});
-    } else {
-      _sKey.currentState.setState(() {});
-    }
+    _keyword = keyword;
+    setState(() {
+      if (widget.type == SearchPage.Search_Type_Article) {
+        _articleListPage = ArticleListPage(ValueKey(keyword));
+      } else {
+        _wechatArticleListPage = WechatArticleListPage(ValueKey('${widget.sId}_$keyword'));
+      }
+    });
   }
 
   ///获取热词
@@ -125,8 +118,8 @@ class _SearchPageState extends State<SearchPage> {
       _hotkeyWidget = FlowItemsWidget(
         items: _hotkeys,
         onPress: (item) {
-          _keyword = item.name;
-          _search(_keyword);
+          _searchController.text = item.name;
+          _search(item.name);
         },
       );
       setState(() {});

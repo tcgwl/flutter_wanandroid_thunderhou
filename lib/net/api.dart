@@ -12,6 +12,9 @@ class WanApi {
   //导航
   static String navi = 'navi/json';
 
+  //知识体系
+  static String tree = 'tree/json';
+
   //搜索热词
   static String hotkey = '/hotkey/json';
 
@@ -29,6 +32,9 @@ class WanApi {
 
   //项目列表
   static String projectList = 'project/list/';
+
+  //最新项目列表
+  static String latestProjectList = 'article/listproject/';
 
   //登录
   static String login = 'user/login';

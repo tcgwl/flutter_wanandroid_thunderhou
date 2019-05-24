@@ -74,6 +74,9 @@ class _AOSPListState extends State<AOSPListPage> with AutomaticKeepAliveClientMi
   ///刷新
   Future<Null> _refresh() async {
     index = 1;
+    if (widget.pid == 0) {
+      index = 0;
+    }
     WanRequest().getProjectList(widget.pid, index).then((data) {
       if (this.mounted) {
         setState(() {

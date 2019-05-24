@@ -9,6 +9,7 @@ import 'package:wanandroid/view/aosp_page.dart';
 import 'package:wanandroid/view/home_page.dart';
 import 'package:wanandroid/view/mine_page.dart';
 import 'package:wanandroid/view/navigation_page.dart';
+import 'package:wanandroid/view/tree_page.dart';
 import 'package:wanandroid/view/wechat_article_page.dart';
 import 'package:wanandroid/conf/themes.dart';
 import 'package:wanandroid/conf/constant.dart';
@@ -20,7 +21,7 @@ class WanApp extends StatefulWidget {
 }
 
 class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
-  var _titles = ['首页', '导航', '公众号', '项目', '我的']; //导航栏标题
+  var _titles = ['首页', '体系', '导航', '项目', '公众号']; //导航栏标题
 //  var _titles = ['首页', '导航', '公众号', '项目', '我的']; //导航栏标题
   var _pageController;
   int _tabIndex = 0;
@@ -105,18 +106,19 @@ class _WanAppState extends State<WanApp> with TickerProviderStateMixin {
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
           HomePage(),
+          TreePage(),
           NavPage(),
-          WechatArticlePage(),
           AOSPPage(),
-//          MinePage(),
+          WechatArticlePage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), title: _getNavText(0)),
-          BottomNavigationBarItem(icon: Icon(Icons.navigation), title: _getNavText(1)),
-          BottomNavigationBarItem(icon: Icon(Icons.wb_cloudy), title: _getNavText(2)),
+          BottomNavigationBarItem(icon: Icon(Icons.widgets), title: _getNavText(1)),
+          BottomNavigationBarItem(icon: Icon(Icons.navigation), title: _getNavText(2)),
           BottomNavigationBarItem(icon: Icon(Icons.apps), title: _getNavText(3)),
+          BottomNavigationBarItem(icon: Icon(Icons.wb_cloudy), title: _getNavText(4)),
 //          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: _getNavText(4)),
         ],
         currentIndex: _tabIndex,

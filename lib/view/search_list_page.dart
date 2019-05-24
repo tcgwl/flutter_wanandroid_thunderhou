@@ -12,19 +12,23 @@ import 'package:wanandroid/widget/loading.dart';
 import 'package:wanandroid/widget/pullrefresh/pullrefresh.dart';
 
 ///搜索文章列表
-class ArticleList extends StatefulWidget {
-  final id;
-  final String keyword;
+class ArticleListPage extends StatefulWidget {
+  String keyword;
 
-  const ArticleList({Key key, this.id, this.keyword: ''}) : super(key: key);
+  // 这里为什么用含有key的这个构造,大家可以试一下不带key
+  // 直接ArticleListPage(this.keyword) ,看看会有什么bug;
+  ArticleListPage(ValueKey<String> key) : super(key: key) {
+    keyword = key.value.toString();
+  }
+
 
   @override
   State<StatefulWidget> createState() {
-    return ArticleListState();
+    return ArticleListPageState();
   }
 }
 
-class ArticleListState extends State<ArticleList> with AutomaticKeepAliveClientMixin {
+class ArticleListPageState extends State<ArticleListPage> with AutomaticKeepAliveClientMixin {
   GlobalKey<PullRefreshState> _key = GlobalKey();
   PageStatus status = PageStatus.LOADING;
   int index = 0;
