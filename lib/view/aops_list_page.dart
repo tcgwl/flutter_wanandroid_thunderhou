@@ -41,6 +41,7 @@ class _AOSPListState extends State<AOSPListPage> with AutomaticKeepAliveClientMi
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _buildBody();
   }
 

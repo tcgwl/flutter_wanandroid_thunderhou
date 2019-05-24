@@ -14,11 +14,13 @@ class FlowItemsWidget extends StatefulWidget {
   State<StatefulWidget> createState() => FlowItemState();
 }
 
-class FlowItemState extends State<FlowItemsWidget> {
+// AutomaticKeepAliveClientMixin: 为避免TarBarView每次切换时其条目Widget都会执行initState()
+class FlowItemState extends State<FlowItemsWidget> with AutomaticKeepAliveClientMixin {
   final List<Widget> children = <Widget>[];
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     List<Widget> items = widget.items.map((FlowItemVO data) {
       return RaisedButton(
         onPressed: () => widget.onPress(data),
@@ -45,5 +47,9 @@ class FlowItemState extends State<FlowItemsWidget> {
       ),
     );
   }
+
+  // AutomaticKeepAliveClientMixin: 为避免TarBarView每次切换时其条目Widget都会执行initState()
+  @override
+  bool get wantKeepAlive => true;
 
 }
