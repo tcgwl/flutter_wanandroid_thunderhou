@@ -71,6 +71,7 @@ flutter:
     - images/ic_theme.png
     - images/ic_favorite.png
     - images/ic_setting.png
+    - images/ic_logout.png
     - images/ic_todo.png
     - images/ic_about.png
     - images/ic_feedback.png

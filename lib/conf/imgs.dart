@@ -11,6 +11,7 @@ class ImagePath {
   static String icTheme = 'images/ic_theme.png';
   static String icFavorite = 'images/ic_favorite.png';
   static String icSetting = 'images/ic_setting.png';
+  static String icLogout = 'images/ic_logout.png';
   static String icTodo = 'images/ic_todo.png';
   static String icUpdate = 'images/ic_update.png';
   static String icFeedback = 'images/ic_feedback.png';

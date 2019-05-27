@@ -37,9 +37,10 @@ class _MainLeftPageState extends State<MainLeftPage> {
         }
       });
     });
-    _pageInfoList.add(PageInfo('收藏', ImagePath.icFavorite, FavoritePage()));
-    _pageInfoList.add(PageInfo('TODO', ImagePath.icTodo, TodoPage()));
-    _pageInfoList.add(PageInfo('设置', ImagePath.icSetting, SettingPage()));
+    _pageInfoList.add(PageInfo(0, '我的收藏', ImagePath.icFavorite, FavoritePage()));
+    _pageInfoList.add(PageInfo(1, 'TODO', ImagePath.icTodo, TodoPage()));
+    _pageInfoList.add(PageInfo(2, '设置', ImagePath.icSetting, SettingPage()));
+    _pageInfoList.add(PageInfo(3, '退出登录', ImagePath.icLogout, null));
   }
 
   void _getUser() async {
@@ -56,6 +57,28 @@ class _MainLeftPageState extends State<MainLeftPage> {
 
   void _setUser(String value) async {
     SpUtil.setString(Constant.spUserName, value);
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: const Text('确定要退出登录吗?'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('取消'),
+              onPressed: () => Router().back(context),
+            ),
+            FlatButton(
+                child: const Text('确定'),
+                onPressed: () {
+                  Router().back(context);
+                  _logout();
+                }
+            ),
+          ],
+        )
+    );
   }
 
   /// 退出登录
@@ -103,25 +126,7 @@ class _MainLeftPageState extends State<MainLeftPage> {
             if (!Constant.isLogin) {
               Router().openPage(context, LoginPage());
             } else {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    content: const Text('确定要退出登录吗?'),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: const Text('取消'),
-                        onPressed: () => Router().back(context),
-                      ),
-                      FlatButton(
-                          child: const Text('确定'),
-                          onPressed: () {
-                            Router().back(context);
-                            _logout();
-                          }
-                      ),
-                    ],
-                  )
-              );
+              _showLogoutDialog();
             }
           },
           child: Column(
@@ -180,15 +185,25 @@ class _MainLeftPageState extends State<MainLeftPage> {
                 style: TextStyle(fontSize: TextSizeConst.middleTextSize),
               ),
               onTap: () {
-                if (pageInfo.title == '设置') {
-                  Router().openPage(context, pageInfo.page);
-                } else {
-                  if (Constant.isLogin) {
+                switch (pageInfo.id) {
+                  case 1:
+                  case 2:
+                    if (Constant.isLogin) {
+                      Router().openPage(context, pageInfo.page);
+                    } else {
+                      ToastUtil.showShort('请先登录');
+                      Router().openPage(context, LoginPage());
+                    }
+                    break;
+                  case 3:
+                    if (Constant.isLogin) {
+                      _showLogoutDialog();
+                    } else {
+                      ToastUtil.showShort('请先登录');
+                    }
+                    break;
+                  default:
                     Router().openPage(context, pageInfo.page);
-                  } else {
-                    ToastUtil.showShort('请先登录');
-                    Router().openPage(context, LoginPage());
-                  }
                 }
               },
             );
@@ -200,8 +215,9 @@ class _MainLeftPageState extends State<MainLeftPage> {
 }
 
 class PageInfo {
-  PageInfo(this.title, this.iconPath, this.page, [this.withScaffold = true]);
+  PageInfo(this.id, this.title, this.iconPath, this.page, [this.withScaffold = true]);
 
+  int id;
   String title;
   String iconPath;
   Widget page;
