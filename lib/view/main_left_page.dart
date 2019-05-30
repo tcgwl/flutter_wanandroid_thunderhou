@@ -186,8 +186,8 @@ class _MainLeftPageState extends State<MainLeftPage> {
               ),
               onTap: () {
                 switch (pageInfo.id) {
+                  case 0:
                   case 1:
-                  case 2:
                     if (Constant.isLogin) {
                       Router().openPage(context, pageInfo.page);
                     } else {
